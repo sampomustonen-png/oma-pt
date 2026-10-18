@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="fi"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Oma PT</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Oma PT">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#142230" media="(prefers-color-scheme: dark)">
+<style>
+:root{--bg:#eceff3;--c:#fff;--t:#14202b;--m:#5d6b7a;--a:#1f5eff;--ok:#1f9d55;--b:#d9dfe6;color-scheme:light dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0c151d;--c:#142230;--t:#e8eef4;--m:#93a4b5;--a:#6ea0ff;--ok:#43c47a;--b:#243648}}
+:root[data-theme="dark"]{--bg:#0c151d;--c:#142230;--t:#e8eef4;--m:#93a4b5;--a:#6ea0ff;--ok:#43c47a;--b:#243648}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--bg);color:var(--t);font:16px/1.45 -apple-system,system-ui,"Segoe UI",Roboto,sans-serif}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--c);z-index:10}
+#bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:11;background:var(--c);border-bottom:1px solid var(--b);padding:8px 12px;display:flex;align-items:center;gap:10px}
+#bar.done{background:var(--a);color:#fff}
+#tm{font:800 32px/1 -apple-system,system-ui,sans-serif;font-variant-numeric:tabular-nums;letter-spacing:-.5px;min-width:76px}
+.cs{display:flex;gap:6px;overflow-x:auto;flex:1;scrollbar-width:none}.cs::-webkit-scrollbar{display:none}
+.ch{flex:none;border:1px solid var(--b);background:var(--bg);color:var(--t);border-radius:999px;padding:9px 13px;font:600 15px inherit}
+.ch.on{background:var(--a);border-color:var(--a);color:#fff}
+main{padding:12px 12px 100px;max-width:560px;margin:auto}
+.card{background:var(--c);border:1px solid var(--b);border-radius:14px;padding:14px;margin-bottom:12px}
+h2,h3{margin:0 0 4px;letter-spacing:-.2px}h2{font-size:22px}h3{font-size:17px}
+.m{color:var(--m);font-size:14px}
+.row{display:grid;grid-template-columns:22px 1fr 1fr 50px;gap:8px;align-items:center;margin-top:8px}
+input,select,textarea{width:100%;font:inherit;font-size:17px;padding:10px;border:1px solid var(--b);border-radius:10px;background:var(--bg);color:var(--t)}
+.ck{height:46px;border-radius:10px;border:2px solid var(--b);background:none;color:var(--m);font-size:22px}
+.ck.on{background:var(--ok);border-color:var(--ok);color:#fff}
+.btn{display:block;width:100%;margin-top:10px;padding:14px;border:0;border-radius:12px;background:var(--a);color:#fff;font:700 17px inherit}
+.btn.g{background:none;color:var(--m);border:1px solid var(--b)}
+nav{position:fixed;bottom:0;left:0;right:0;display:flex;background:var(--c);border-top:1px solid var(--b);padding-bottom:env(safe-area-inset-bottom,0px);z-index:11}
+nav button{flex:1;padding:8px 0;border:0;background:none;color:var(--m);font:12px inherit}
+nav button b{display:block;font-size:21px;font-weight:400}
+nav .on{color:var(--a);font-weight:700}
+ul{margin:6px 0 0;padding-left:20px}li{margin-bottom:5px}
+.wk{display:flex;gap:6px;margin:10px 0}.wk i{flex:1;height:8px;border-radius:4px;background:var(--b)}.wk i.p{background:var(--a)}.wk i.d{background:var(--ok)}
+.big{font-size:44px;font-weight:800;letter-spacing:-1px;line-height:1.1}
+summary{font-weight:700;padding:2px 0}
+.gd{background:var(--bg);border-radius:10px;padding:10px 12px;margin:8px 0;font-size:15px}.gd p{margin:0 0 4px}.gd ol{margin:4px 0 8px;padding-left:20px}.gd a{color:var(--a);font-weight:600}
+</style></head><body>
+<header id="bar"><div id="tm">0:00</div><div class="cs">
+<button class="ch" data-a="tm" data-s="60">1:00</button><button class="ch" data-a="tm" data-s="90">1:30</button><button class="ch" data-a="tm" data-s="120">2:00</button><button class="ch" data-a="tm" data-s="180">3:00</button><button class="ch" data-a="add">+30 s</button><button class="ch" data-a="tm" data-s="0">Nollaa</button></div></header>
+<main id="v"></main>
+<nav><button data-t="w"><b>🏋️</b>Treeni</button><button data-t="r"><b>🏃</b>Juoksu</button><button data-t="p"><b>📅</b>Ohjelma</button><button data-t="t"><b>💡</b>Vinkit</button></nav>
+<script>
+const $=s=>document.querySelector(s),K='omapt1';
+const td=()=>new Date(Date.now()-new Date().getTimezoneOffset()*6e4).toISOString().slice(0,10);
+let S=null;try{S=JSON.parse(localStorage.getItem(K))}catch(e){}
+S=Object.assign({block:1,start:td(),w:{},f:{},last:{},hist:[],runs:[],run0:5,draft:null,msg:null},S||{});
+const sv=()=>{try{localStorage.setItem(K,JSON.stringify(S))}catch(e){}};
+const fm=n=>String(Math.round(n*100)/100).replace('.',','),nu=v=>parseFloat(String(v).replace(',','.'))||0,r25=x=>Math.round(x/2.5)*2.5;
+const fd=d=>(+d.slice(8))+'.'+(+d.slice(5,7))+'.';
+const wk=()=>Math.floor((new Date(td())-new Date(S.start))/6048e5)+1;
+// liike: [nimet (tämä jakso|seuraava jakso), sarjat, toistot min, toistot max, painon askel, tauko s]
+const P={
+A:['Päivä A: jalat ja työntö',[
+['Back squat|Front squat',4,5,8,5,150],['Bench press|Incline dumbbell press',4,6,10,2.5,150],['Barbell row|Chest-supported row',3,8,10,2.5,120],['Dumbbell shoulder press|Machine shoulder press',3,8,12,2,90],['Triceps pushdown|Skull crusher',3,10,15,2.5,60],['Standing calf raise|Seated calf raise',3,10,15,5,60],['Cable crunch|Dumbbell side bend',3,10,15,2.5,60]]],
+B:['Päivä B: selkä ja takaketju',[
+['Romanian deadlift|Conventional deadlift',4,5,8,5,150],['Wide-grip lat pulldown|Close-grip lat pulldown',4,6,10,2.5,150],['Machine chest press|Incline machine press',3,8,12,2.5,120],['Bulgarian split squat|Dumbbell lunge',3,8,12,2,120],['Dumbbell biceps curl|Hammer curl',3,10,15,2,60],['Lateral raise|Cable lateral raise',3,12,15,1,60],['Back extension|Weighted back extension',3,10,15,2.5,60]]],
+C:['Päivä C: koko vartalo',[
+['Leg press|Goblet squat',4,8,12,5,120],['Overhead press|Arnold press',4,5,8,2.5,150],['Seated cable row|One-arm dumbbell row',3,8,12,2.5,90],['Lying leg curl|Barbell hip thrust',3,8,12,2.5,90],['Cable fly|Dumbbell fly',3,10,15,1,60],['Cable face pull|Rear delt dumbbell raise',3,12,15,1,60],['Hanging leg raise|Decline sit-up',3,10,15,1,60]]]};
+const nm=e=>{const a=e[0].split('|'),v=(S.block-1)%2;return[a[v],a[1-v]]};
+// ohjeet: lihakset|vaihe 1|vaihe 2|vaihe 3
+const G={
+'Back squat':'Reidet, pakarat, selän ojentajat|Tanko lapojen päällä, jalat hartioiden leveydellä, selkä suorana|Laskeudu lantio taakse ja alas, kunnes reidet ovat vähintään vaakatasossa|Työnnä jaloilla ylös, polvet suunnassa varpaiden kanssa',
+'Front squat':'Reidet, pakarat, keskivartalo|Tanko olkapäiden etuosan päällä, kyynärpäät korkealla|Laskeudu syvään ylävartalo pystyssä|Nouse ylös kyynärpäät koholla',
+'Bench press':'Rinta, olkapäiden etuosa, ojentajat|Makaa penkillä lavat yhteen puristettuna, jalat tukevasti lattiassa|Laske tanko hallitusti rinnan alaosaan|Paina ylös, kyynärpäät noin 45 asteen kulmassa vartaloon',
+'Incline dumbbell press':'Ylärinta, olkapäät, ojentajat|Penkki 30–45 asteen kallistuksessa, käsipainot rinnan korkeudella|Paina painot ylös hieman toisiaan kohti|Laske hallitusti rinnan sivuille',
+'Barbell row':'Leveä selkä, yläselkä, hauikset|Etunoja noin 45 astetta, selkä suorana, tanko polvien alla|Vedä tanko navan suuntaan ja purista lapoja yhteen|Laske hallitusti alas',
+'Chest-supported row':'Ylä- ja keskiselkä, takaolkapäät|Makaa rinta penkkiä vasten, käsipainot roikkuvat suorina|Vedä kyynärpäät taakse ja purista lapoja yhteen|Laske hallitusti ilman heilutusta',
+'Dumbbell shoulder press':'Olkapäät, ojentajat|Istu selkä tuettuna, käsipainot korvien korkeudella|Paina painot suoraan ylös|Laske hallitusti takaisin leuan korkeudelle',
+'Machine shoulder press':'Olkapäät, ojentajat|Säädä istuin niin, että kahvat ovat olkapäiden korkeudella|Paina kahvat ylös niin, ettei selkä notkistu|Laske hallitusti alas',
+'Triceps pushdown':'Ojentajat|Seiso taljan edessä, kyynärpäät kiinni kyljissä|Paina kahva suoraksi alas|Anna käden palata hallitusti, kyynärpäät pysyvät paikallaan',
+'Skull crusher':'Ojentajat|Makaa penkillä, tanko ojennetuin käsin rinnan yllä|Taivuta vain kyynärnivelistä ja laske tanko otsan suuntaan|Ojenna kädet takaisin ylös',
+'Standing calf raise':'Pohkeet|Seiso varpaat korokkeella, kantapäät ilmassa|Nouse varpaille mahdollisimman korkealle ja pidä hetki|Laske hitaasti, kunnes pohkeessa tuntuu venytys',
+'Seated calf raise':'Pohkeet|Istu pohjekoneeseen, tyyny reisien päällä|Nouse varpaille ja pidä hetki yläasennossa|Laske hitaasti täyteen venytykseen',
+'Cable crunch':'Vatsalihakset|Polvistu taljan eteen, köysi niskan tuntumassa|Pyöristä selkä ja vie kyynärpäät kohti polvia|Palaa hallitusti ylös, lantio pysyy paikallaan',
+'Dumbbell side bend':'Vinot vatsalihakset|Seiso käsipaino toisessa kädessä, jalat hartioiden leveydellä|Taivuta vartaloa sivulle kohti painoa|Palaa pystyyn vatsalihaksilla, älä kallistu eteen tai taakse',
+'Romanian deadlift':'Takareidet, pakarat, selän ojentajat|Tanko lantion edessä, polvet hieman koukussa, selkä suorana|Työnnä lantiota taakse ja laske tanko reittä pitkin sääreen puoliväliin|Nouse ylös työntämällä lantio eteen',
+'Conventional deadlift':'Koko takaketju, reidet|Jalat lantion leveydellä, tanko säären päällä, selkä suorana|Työnnä jaloilla lattiaa poispäin ja nosta tanko vartalon läheltä|Ojenna lantio ylös ja laske tanko hallitusti alas',
+'Wide-grip lat pulldown':'Leveä selkä, hauikset|Ote hartioita leveämmin, rinta ylhäällä|Vedä tanko solisluiden korkeudelle, kyynärpäät alas ja taakse|Palauta hallitusti, kädet venyvät täyteen mittaan',
+'Close-grip lat pulldown':'Leveä selkä, hauikset|Käytä kapeaa kahvaa ja pidä rinta ylhäällä|Vedä kahva rintaan kyynärpäät kylkiä pitkin|Palauta hallitusti ylös',
+'Machine chest press':'Rinta, ojentajat, olkapäiden etuosa|Säädä istuin niin, että kahvat ovat rinnan korkeudella|Paina kahvat suoriksi, lavat pysyvät selkänojassa|Palauta hallitusti, älä anna painopakan iskeä yhteen',
+'Incline machine press':'Ylärinta, olkapäät, ojentajat|Säädä istuin niin, että kahvat ovat ylärinnan korkeudella|Paina kahvat ylös ja eteen|Palauta hallitusti',
+'Bulgarian split squat':'Reidet, pakarat|Aseta takajalan jalkaterä penkille ja ota pitkä askel eteen|Laske takapolvi kohti lattiaa, etupolvi seuraa varpaiden linjaa|Työnnä etujalalla ylös',
+'Dumbbell lunge':'Reidet, pakarat|Käsipainot käsissä, astu pitkä askel eteen|Laske takapolvi kohti lattiaa, vartalo pysyy pystyssä|Työnnä etujalalla takaisin alkuasentoon',
+'Dumbbell biceps curl':'Hauikset|Seiso kyynärpäät kiinni kyljissä|Nosta käsipainot ylös hauiksilla kämmenet kohti olkapäitä|Laske hitaasti, älä heilauta vartalolla',
+'Hammer curl':'Hauikset, kyynärvarret|Pidä käsipainoja peukalot ylöspäin|Nosta paino olkapäälle, kyynärpäät pysyvät kyljissä|Laske hallitusti alas',
+'Lateral raise':'Olkapäiden sivuosa|Seiso käsipainot sivuilla, kyynärpäät hieman koukussa|Nosta kädet sivulle olkapäiden korkeudelle|Laske hitaasti, älä heilauta',
+'Cable lateral raise':'Olkapäiden sivuosa|Seiso sivuttain taljaan, kahva kauempana olevassa kädessä|Nosta käsi sivulle olkapään korkeudelle|Laske hallitusti, vastus säilyy koko liikeradan',
+'Back extension':'Selän ojentajat, pakarat|Aseta lantio tuen reunalle, vartalo suorana|Laskeudu vyötäröstä alas selkä suorana|Nouse takaisin suoraksi, älä yliojenna selkää',
+'Weighted back extension':'Selän ojentajat, pakarat|Pidä painolevyä rinnan edessä|Laskeudu vyötäröstä alas selkä suorana|Nouse takaisin suoraksi, älä yliojenna selkää',
+'Leg press':'Reidet, pakarat|Istu selkä tuettuna, jalat levyllä hartioiden leveydellä|Laske polvet kohti rintaa, lantio pysyy penkissä|Työnnä ylös, älä lukitse polvia täysin',
+'Goblet squat':'Reidet, pakarat, keskivartalo|Pidä käsipainoa rinnan edessä kahdella kädellä|Laskeudu syvään, kyynärpäät polvien sisäpuolella|Nouse ylös rinta pystyssä',
+'Overhead press':'Olkapäät, ojentajat, keskivartalo|Seiso tanko solisluilla, vatsa ja pakarat tiukkoina|Paina tanko suoraan ylös pään ohi|Laske hallitusti takaisin solisluille',
+'Arnold press':'Olkapäät, ojentajat|Aloita käsipainot rinnan edessä, kämmenet itseesi päin|Paina ylös ja kierrä kämmenet ulospäin|Laske kiertäen takaisin alkuasentoon',
+'Seated cable row':'Keskiselkä, lavat, hauikset|Istu jalat tuettuna, selkä suorana|Vedä kahva vatsaan ja purista lapoja yhteen|Palauta hallitusti niin, ettei selkä pyöristy',
+'One-arm dumbbell row':'Leveä selkä, hauis|Tue toinen käsi ja polvi penkille, selkä vaakasuorassa|Vedä käsipaino lantion suuntaan, kyynärpää ylös|Laske hallitusti alas',
+'Lying leg curl':'Takareidet|Makaa vatsallasi, tyyny nilkkojen yläpuolella|Koukista polvet kohti pakaroita|Laske hallitusti alas',
+'Barbell hip thrust':'Pakarat, takareidet|Selkä penkkiä vasten, tanko lantion päällä|Työnnä lantio ylös, kunnes vartalo on suora|Purista pakaroita yläasennossa ja laske hallitusti',
+'Cable fly':'Rinta|Seiso taljojen välissä, kyynärpäät hieman koukussa|Vedä kädet kaarena yhteen rinnan eteen|Palauta hitaasti, kunnes rinnassa tuntuu venytys',
+'Dumbbell fly':'Rinta|Makaa penkillä painot ylhäällä, kyynärpäät hieman koukussa|Laske kädet kaarena sivuille rinnan tasolle|Nosta takaisin ylös rintalihaksilla',
+'Cable face pull':'Takaolkapäät, yläselkä|Aseta talja kasvojen korkeudelle, köysi käsissä|Vedä köysi kohti kasvoja, kyynärpäät korkealla|Purista lapoja yhteen ja palauta hallitusti',
+'Rear delt dumbbell raise':'Takaolkapäät, yläselkä|Taivu eteen selkä suorana, painot roikkuvat|Nosta kädet sivulle, kyynärpäät hieman koukussa|Laske hallitusti',
+'Hanging leg raise':'Alavatsa, lonkankoukistajat|Ripu tangossa, vartalo vakaana|Nosta jalat lantion yläpuolelle suorina tai koukussa|Laske hallitusti ilman heilumista',
+'Decline sit-up':'Vatsalihakset|Aseta jalat penkin tukiin, vartalo kalteella alustalla|Nosta ylävartalo kohti polvia|Laske hallitusti, älä vedä niskasta'};
+const gd=n=>{const g=(G[n]||'').split('|');if(!g[0])return'';return`<p><b>Lihakset:</b> ${g[0]}</p><ol>${g.slice(1).map(x=>`<li>${x}</li>`).join('')}</ol><a href="https://www.youtube.com/results?search_query=${encodeURIComponent(n+' exercise form')}" target="_blank" rel="noopener">Katso esimerkkivideo</a>`};
+const gw=e=>{const[n,a]=nm(e);if(S.w[n])return S.w[n];const o=S.w[a];return o?{kg:r25(o.kg*.9),r:e[2]}:null};
+const nx=()=>{const l=S.hist.length&&S.hist[S.hist.length-1].day;return l?'ABC'[('ABC'.indexOf(l)+1)%3]:'A'};
+function mk(day){const dl=wk()==6;return{day,d:td(),x:P[day][1].map(e=>{const w=gw(e),n=dl?Math.max(2,e[1]-1):e[1],kg=w?(dl?r25(w.kg*.9):w.kg):'';return Array.from({length:n},()=>({k:kg,r:w?w.r:'',d:0}))})}}
+// ajastin
+let T={e:0,d:0},AC;
+const ac=()=>{try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();AC.resume()}catch(e){}};
+function bp(){try{navigator.vibrate&&navigator.vibrate([300,150,300]);const o=AC.createOscillator(),g=AC.createGain();o.connect(g);g.connect(AC.destination);g.gain.value=.25;o.frequency.value=880;o.start();o.stop(AC.currentTime+.6)}catch(e){}}
+function ts(s){T.e=s?Date.now()+s*1e3:0;T.d=0;tk()}
+function tk(){const l=T.e?Math.max(0,Math.ceil((T.e-Date.now())/1e3)):0;$('#tm').textContent=Math.floor(l/60)+':'+String(l%60).padStart(2,'0');if(T.e&&!l&&!T.d){T.d=1;bp()}$('#bar').classList.toggle('done',!!T.e&&!l)}
+setInterval(tk,250);
+// näkymät
+let tab='w';
+function vw(){
+const w=wk(),dl=w==6;let h='';
+if(S.msg)h+=`<div class="card">${S.msg}<button class="btn" data-a="cm">Selvä</button></div>`;
+if(w>6){const n=S.hist.filter(x=>x.d>=S.start).length,r=S.runs.filter(x=>x.d>=S.start).length;
+return h+`<div class="card"><h2>Jakso ${S.block} on valmis</h2><p>Teit jakson aikana ${n} salitreeniä ja ${r} juoksua. Seuraava jakso käyttää tuloksiasi lähtökohtana: osa liikkeistä vaihtuu variaatioihin ja juoksumatka kasvaa.</p><button class="btn" data-a="nb">Aloita jakso ${S.block+1}</button></div>`}
+if(!S.draft)S.draft=mk(nx());
+const d=S.draft;
+h+=`<div class="card"><h2>Jakso ${S.block}, viikko ${w}/6</h2><p class="m">${dl?'Kevennysviikko: sarjoja on vähemmän ja painot ovat noin 10 % kevyempiä. Anna kehon palautua.':'Kuorma kasvaa, kun saavutat toistotavoitteen. Jätä jokaiseen sarjaan 1–3 toistoa varaan.'} Kesto noin 80–90 min.</p>
+<div class="cs" style="margin-top:8px">${['A','B','C'].map(x=>`<button class="ch${x==d.day?' on':''}" data-a="day" data-d="${x}">Päivä ${x}</button>`).join('')}</div></div>
+<details class="card"><summary>Lämmittely ja ohjeet</summary><ul><li>Kevyt kardio 5 min (soutulaite, crosstrainer tai reipas kävely).</li><li>Liikkuvuus 3 min: lonkat, olkapäät, rintaranka.</li><li>Ensimmäiseen liikkeeseen 2–3 lämmittelysarjaa (noin 50 %, 70 % ja 85 % työpainosta).</li><li>Merkitse sarja valmiiksi ✓-napilla, niin tauon ajastin käynnistyy itse.</li></ul></details>
+<h2 style="margin:4px 2px 10px">${P[d.day][0]}</h2>`;
+P[d.day][1].forEach((e,i)=>{const[n]=nm(e),w0=gw(e);
+h+=`<div class="card"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px"><h3>${n}</h3><button class="ch" data-a="gd">Ohje</button></div><div class="gd" hidden>${gd(n)}</div><div class="m">${d.x[i].length} × ${e[2]}–${e[3]} toistoa, tauko ${fm(e[5]/60)} min${S.last[n]?'<br>Viimeksi (kg × toistot): '+S.last[n]:''}</div>${w0?'':'<div class="m" style="margin-top:6px">Valitse kevyt aloituspaino, jolla jää 2–3 toistoa varaan.</div>'}<div class="row m"><span></span><span>Paino (kg)</span><span>Toistot</span><span></span></div>`;
+d.x[i].forEach((s,j)=>h+=`<div class="row"><b>${j+1}</b><input inputmode="decimal" data-x="${i}" data-s="${j}" data-f="k" value="${s.k}" aria-label="Paino"><input inputmode="numeric" data-x="${i}" data-s="${j}" data-f="r" value="${s.r}" aria-label="Toistot"><button class="ck${s.d?' on':''}" data-a="ck" data-x="${i}" data-s="${j}" aria-label="Sarja valmis">✓</button></div>`);
+h+='</div>'});
+return h+`<button class="btn" data-a="fin">Tallenna treeni</button><button class="btn g" data-a="drop">Nollaa syötteet</button>`}
+function fin(){const d=S.draft,dl=wk()==6,lg={d:d.d,day:d.day,x:{}},o=[];
+P[d.day][1].forEach((e,i)=>{const[n]=nm(e),ss=d.x[i].filter(s=>s.d&&nu(s.r)>0).map(s=>({k:nu(s.k),r:nu(s.r)}));if(!ss.length)return;
+lg.x[n]=ss;S.last[n]=ss.map(s=>fm(s.k)+' × '+s.r).join(', ');if(dl)return;
+const k=ss[ss.length-1].k,m=Math.min(...ss.map(s=>s.r));let nk=k,nr=e[2],t;
+if(ss.length>=e[1]&&m>=e[3]){nk=k+e[4];S.f[n]=0;t='nosta painoa: '+fm(nk)+' kg'}
+else if(m<e[2]){S.f[n]=(S.f[n]||0)+1;if(S.f[n]>=2){nk=r25(k*.9);S.f[n]=0;t='kevennä painoa: '+fm(nk)+' kg'}else t='pysy painossa '+fm(k)+' kg ja hae vähintään '+e[2]+' toistoa'}
+else{S.f[n]=0;nr=Math.min(e[3],m+1);t='pysy painossa '+fm(k)+' kg, tavoite '+nr+' toistoa'}
+S.w[n]={kg:nk,r:nr};o.push(`<li><b>${n}</b>: ${t}</li>`)});
+if(!Object.keys(lg.x).length){S.msg='<h3>Ei tallennettavaa</h3><p class="m">Merkitse vähintään yksi sarja valmiiksi ✓-napilla.</p>';sv();R();return}
+S.hist.push(lg);S.draft=null;
+S.msg='<h3>Treeni tallennettu</h3>'+(dl?'<p class="m">Kevennysviikolla painoja ei muuteta.</p>':'<p class="m">Seuraavalla kerralla:</p><ul>'+o.join('')+'</ul>');
+sv();R();scrollTo(0,0)}
+const rp=b=>{const s=Math.min(S.run0+(b-1)*1.5,8);return[0,.5,1,1.5,2,0].map(x=>Math.min(10,s+x))};
+const pace=(k,m)=>{const p=m/k;return Math.floor(p)+':'+String(Math.round(p%1*60)%60).padStart(2,'0')+' /km'};
+function rt(){const p=rp(S.block),w=Math.min(wk(),6),l=S.runs[S.runs.length-1];let t=p[w-1];if(l&&l.rpe>=9&&w<6)t=Math.min(t,l.km);return t}
+function vr(){const p=rp(S.block),w=Math.min(wk(),6),t=rt();
+let h=`<div class="card"><h2>Juoksu viikolla ${w}/6</h2><div class="big">${fm(t)} km</div><p class="m">${w==6?'Kevennysviikko: rauhallinen, lyhyempi lenkki.':'Rauhallinen vauhti, jolla pystyt vielä puhumaan.'}${w>=4&&w<6&&S.block>1?' Voit juosta lenkin viimeiset 2 km hieman reippaammin.':''}${t>=10?' Olet saavuttanut 10 km. Jatkossa tavoite on parantaa vauhtia.':''}</p>
+<div class="wk">${p.map((x,i)=>`<i class="${i<w-1?'d':i==w-1?'p':''}"></i>`).join('')}</div><div class="m">Jakson matkat (km): ${p.map(fm).join(', ')}</div></div>
+<div class="card"><h3>Kirjaa juoksu</h3><div class="row" style="grid-template-columns:1fr 1fr"><label class="m">Matka (km)<input id="rk" inputmode="decimal" value="${fm(t)}"></label><label class="m">Aika (min)<input id="rm" inputmode="decimal"></label></div>
+<label class="m" style="display:block;margin-top:8px">Rasittavuus (1 = hyvin kevyt, 10 = maksimi)<select id="rr">${[1,2,3,4,5,6,7,8,9,10].map(x=>`<option${x==6?' selected':''}>${x}</option>`).join('')}</select></label><button class="btn" data-a="run">Tallenna juoksu</button>
+<p class="m">Jos rasittavuus on 9 tai 10, seuraavalla viikolla matka pysyy samana.</p></div>
+<div class="card"><h3>Lähtötaso</h3><label class="m">Nykyinen helppo lenkkisi (km). Jaksojen matkat lasketaan tästä.<input data-r0="1" inputmode="decimal" value="${fm(S.run0)}"></label></div>`;
+if(S.runs.length)h+=`<div class="card"><h3>Edelliset juoksut</h3><ul>${S.runs.slice(-6).reverse().map(r=>`<li>${fd(r.d)}: ${fm(r.km)} km, ${fm(r.min)} min, ${pace(r.km,r.min)}, rasitus ${r.rpe}/10</li>`).join('')}</ul></div>`;
+return h}
+function vp(){const w=wk();let h=`<div class="card"><h2>Jakson rakenne</h2><p>Yksi jakso kestää <b>6 viikkoa</b>: viikot 1–5 kuorma kasvaa ja viikko 6 on kevennysviikko, jolloin sarjoja on vähemmän ja painot kevyempiä. Sen jälkeen sovellus luo uuden jakson: osa liikkeistä vaihtuu variaatioihin, aloituspainot lasketaan tuloksistasi ja juoksumatka kasvaa. Näin eteneminen jatkaa loputtomiin.</p>
+<div class="wk">${[1,2,3,4,5,6].map(i=>`<i class="${i<w?'d':i==w?'p':''}"></i>`).join('')}</div><div class="m">Jakso ${S.block}, viikko ${Math.min(w,6)}/6${w>6?' (jakso valmis)':''}. Alkoi ${fd(S.start)}.</div></div>
+<div class="card"><h3>Viikkorytmi</h3><ul><li>Ma: sali (seuraava päivä A, B tai C)</li><li>Ke: sali</li><li>Pe: sali (valinnainen kolmas kerta)</li><li>La tai Su: juoksu</li></ul><p class="m">Jos ehdit vain kaksi salikertaa, sovellus jatkaa kiertoa A, B, C, joten kaikki liikkeet tulevat vuorollaan. Aja juoksu mieluiten eri päivänä kuin jalkatreeni.</p></div>
+<div class="card"><h3>Tämän jakson liikkeet</h3>${Object.keys(P).map(k=>`<p style="margin:8px 0 2px"><b>${P[k][0]}</b></p><div class="m">${P[k][1].map(e=>nm(e)[0]).join(', ')}</div>`).join('')}</div>`;
+if(S.hist.length)h+=`<div class="card"><h3>Treenihistoria</h3><ul>${S.hist.slice(-8).reverse().map(x=>{let v=0,n=0;for(const k in x.x)x.x[k].forEach(s=>{v+=s.k*s.r;n++});return`<li>${fd(x.d)}: päivä ${x.day}, ${n} sarjaa, nostettu yhteensä ${Math.round(v)} kg</li>`}).join('')}</ul></div>`;
+return h+`<div class="card"><h3>Varmuuskopio</h3><p class="m">Tiedot tallentuvat tämän laitteen selaimeen. Kopioi varmuuskopio talteen esimerkiksi muistiinpanoihin ja palauta se tarvittaessa.</p><textarea id="bk" rows="3" placeholder="Liitä varmuuskopio tähän"></textarea><button class="btn" data-a="cp">Kopioi varmuuskopio</button><button class="btn g" data-a="rs">Palauta liitetystä tekstistä</button><button class="btn g" data-a="nb">Aloita uusi jakso nyt</button></div>`}
+function vt(){return`<div class="card"><h2>Vinkit</h2><ul>
+<li><b>Uni:</b> 7–9 tuntia yössä. Lihas kasvaa levossa, ei salilla.</li>
+<li><b>Proteiini:</b> noin 1,6–2,2 g painokiloa kohti päivässä. Lihaskasvuun tarvitaan myös riittävästi ruokaa, pieni energiaylijäämä auttaa.</li>
+<li><b>Askeleet:</b> 7 000–10 000 askelta päivässä tukee palautumista ja kuntoa.</li>
+<li><b>Tekniikka ensin:</b> lisää painoa vasta, kun liike sujuu hallitusti. Jos jokin sattuu (muu kuin lihasväsymys), keskeytä liike.</li>
+<li><b>Kevennysviikko:</b> älä ohita sitä. Se estää ylikuormituksen ja parantaa seuraavan jakson tuloksia.</li>
+<li><b>Väliin jäänyt viikko:</b> jatka siitä mihin jäit. Jos tauko venyy yli kahteen viikkoon, aloita painoissa noin 10 % kevyemmin.</li>
+<li><b>Mittaa kehitystä:</b> ota kuva ja kehonpaino samoissa olosuhteissa 4 viikon välein. Paino ei ole ainoa mittari.</li>
+<li><b>Juoksukengät:</b> vaihda 600–800 km välein. Lisää viikkomatkaa korkeintaan 10 % kerrallaan.</li>
+<li><b>Terveys:</b> jos sinulla on sairaus tai vamma, keskustele ensin lääkärin tai fysioterapeutin kanssa.</li></ul>
+<p class="m">Ajastin toimii oikein, vaikka vaihtaisit hetkeksi toiseen sovellukseen. Ääni soi vain, kun tämä sivu on auki.</p></div>`}
+function R(){$('#v').innerHTML={w:vw,r:vr,p:vp,t:vt}[tab]();document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.t==tab))}
+document.addEventListener('input',e=>{const t=e.target;if(t.dataset.f&&S.draft){S.draft.x[t.dataset.x][t.dataset.s][t.dataset.f]=t.value;sv()}});
+document.addEventListener('change',e=>{const t=e.target;if(t.dataset.r0){S.run0=Math.min(10,nu(t.value)||5);sv();R()}});
+document.addEventListener('click',e=>{ac();const n=e.target.closest('nav button');if(n){tab=n.dataset.t;R();scrollTo(0,0);return}
+const t=e.target.closest('[data-a]');if(!t)return;const a=t.dataset.a,x=+t.dataset.x,s=+t.dataset.s;
+if(a=='ck'){const o=S.draft.x[x][s];o.d=o.d?0:1;t.classList.toggle('on',!!o.d);if(o.d)ts(P[S.draft.day][1][x][5]);sv()}
+else if(a=='tm')ts(+t.dataset.s);
+else if(a=='add'){T.e=Math.max(T.e,Date.now())+3e4;T.d=0;tk()}
+else if(a=='day'){S.draft=mk(t.dataset.d);sv();R()}
+else if(a=='gd'){const g=t.closest('.card').querySelector('.gd');g.hidden=!g.hidden;t.textContent=g.hidden?'Ohje':'Piilota';t.classList.toggle('on',!g.hidden)}
+else if(a=='fin')fin();
+else if(a=='drop'){S.draft=null;sv();R()}
+else if(a=='cm'){S.msg=null;sv();R()}
+else if(a=='nb'){S.block++;S.start=td();S.draft=null;S.msg='<h3>Uusi jakso alkoi</h3><p class="m">Osa liikkeistä vaihtui variaatioihin ja aloituspainot laskettiin edellisistä tuloksistasi.</p>';sv();tab='w';R();scrollTo(0,0)}
+else if(a=='run'){const km=nu($('#rk').value),min=nu($('#rm').value);if(km>0&&min>0){S.runs.push({d:td(),km,min,rpe:+$('#rr').value});sv();R()}else{$('#rm').focus()}}
+else if(a=='cp'){const j=JSON.stringify(S);$('#bk').value=j;try{navigator.clipboard.writeText(j)}catch(e){}$('#bk').select()}
+else if(a=='rs'){try{const o=JSON.parse($('#bk').value);if(o&&o.block){S=Object.assign(S,o);sv();R()}}catch(e){$('#bk').placeholder='Varmuuskopio ei kelpaa. Liitä koko teksti uudelleen.'}}
+});
+R();tk();
+// näyttö pysyy päällä treenin aikana
+let WL=null;async function wl(){try{if('wakeLock' in navigator&&document.visibilityState=='visible'&&!WL){WL=await navigator.wakeLock.request('screen');WL.addEventListener('release',()=>{WL=null})}}catch(e){}}
+document.addEventListener('visibilitychange',wl);document.addEventListener('click',wl);wl();
+// offline-tuki
+if('serviceWorker' in navigator&&location.protocol.startsWith('http'))addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
+</script></body></html>
