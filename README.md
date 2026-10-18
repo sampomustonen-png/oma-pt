@@ -2,25 +2,28 @@
 
 Henkilökohtainen treeniohjelma sali- ja juoksuharjoitteluun. Toimii puhelimessa myös ilman verkkoyhteyttä.
 
-## Julkaisu GitHub Pagesissa
-1. Pura tämä zip-tiedosto tietokoneella.
-2. Luo github.com:ssa uusi julkinen repository, esimerkiksi nimellä `oma-pt`.
-3. Valitse Add file → Upload files ja vedä kaikki puretut tiedostot (ei kansiota) repositorion juureen. Paina Commit changes.
-4. Avaa Settings → Pages. Valitse Deploy from a branch, haara `main` ja kansio `/ (root)`. Tallenna.
-5. Odota noin minuutti. Sovelluksen osoite on `https://KÄYTTÄJÄNIMI.github.io/oma-pt/`.
+## Julkaisu GitHub Pagesissa (ensimmäinen kerta)
+1. Pura tämä zip-tiedosto.
+2. Luo github.com:ssa julkinen repository, esimerkiksi `oma-pt`.
+3. Valitse Add file → Upload files, vedä kaikki puretut tiedostot (ei kansiota) juureen ja paina Commit changes.
+4. Settings → Pages → Deploy from a branch → `main` ja `/ (root)` → Save.
+5. Sovelluksen osoite: `https://KÄYTTÄJÄNIMI.github.io/oma-pt/`
+6. iPhonella: avaa osoite Safarissa → Jaa → Lisää Koti-valikkoon. Käytä sovellusta sen jälkeen aina Koti-valikon kuvakkeesta.
 
-## Asennus iPhonelle
-1. Avaa osoite Safarissa. Anna sivun latautua kerran verkossa, jotta offline-tuki asentuu.
-2. Valitse Jaa → Lisää Koti-valikkoon.
-3. Käytä sovellusta aina Koti-valikon kuvakkeesta.
+## Uuden version päivitys ilman tulosten menetystä
+Treenitulokset ovat puhelimen muistissa, ja ne säilyvät, kun päivität tiedostot samaan osoitteeseen.
+1. Ota varmuuskopio: sovelluksessa Ohjelma → Jaa varmuuskopio tiedostona → Tallenna Tiedostoihin.
+2. Avaa repository GitHubissa: Add file → Upload files. Vedä uudet tiedostot (`index.html`, `sw.js`, `manifest.webmanifest`, kuvakkeet). Tiedostojen nimien pitää olla samat kuin ennen, jolloin uusi tiedosto korvaa vanhan. Paina Commit changes.
+3. Odota 1–2 minuuttia. Sulje sovellus puhelimessa kokonaan (pyyhkäise ylös sovellusvalitsimessa) ja avaa se uudelleen. Tee tämä tarvittaessa kahdesti.
+4. Tarkista Ohjelma-välilehdeltä, että treenihistoria näkyy.
 
-Koti-valikon sovelluksella on oma tallennustilansa, joka ei jaa tietoja Safarin kanssa. Kirjaa treenit vain Koti-valikon sovelluksessa. Jos olet jo kirjannut tietoja muualla (esimerkiksi Clauden esikatselussa), kopioi varmuuskopio Ohjelma-välilehdeltä ja palauta se Koti-valikon sovelluksessa.
-
-## Päivittäminen
-Kun muutat tiedostoja, vaihda `sw.js`-tiedoston ensimmäisellä rivillä oleva versionumero (esimerkiksi `oma-pt-v2`). Silloin puhelin hakee uuden version.
+Älä tee näitä, ne tyhjentävät tiedot:
+- älä poista Koti-valikon kuvaketta äläkä poista tai nimeä uudelleen repositoriota, koska osoite muuttuu
+- älä tyhjennä Safarin tietoja
+Jos tiedot katoavat, palauta ne: Ohjelma → Palauta tiedostosta.
 
 ## Tiedostot
 - `index.html`: koko sovellus
 - `manifest.webmanifest`: Koti-valikon asetukset
-- `sw.js`: offline-tuki
+- `sw.js`: offline-tuki (vaihda ensimmäisellä rivillä oleva versionumero aina päivityksessä)
 - `icon-192.png`, `icon-512.png`, `apple-touch-icon.png`: kuvakkeet

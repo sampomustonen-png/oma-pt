@@ -10,11 +10,11 @@
 <meta name="apple-mobile-web-app-title" content="Oma PT">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#142230" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#1c1c1e" media="(prefers-color-scheme: dark)">
 <style>
-:root{--bg:#eceff3;--c:#fff;--t:#14202b;--m:#5d6b7a;--a:#1f5eff;--ok:#1f9d55;--b:#d9dfe6;color-scheme:light dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0c151d;--c:#142230;--t:#e8eef4;--m:#93a4b5;--a:#6ea0ff;--ok:#43c47a;--b:#243648}}
-:root[data-theme="dark"]{--bg:#0c151d;--c:#142230;--t:#e8eef4;--m:#93a4b5;--a:#6ea0ff;--ok:#43c47a;--b:#243648}
+:root{--bg:#f2f2f7;--c:#fff;--t:#000;--m:#6c6c70;--a:#007aff;--ok:#34c759;--b:#d1d1d6;color-scheme:light dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#000;--c:#1c1c1e;--t:#fff;--m:#98989f;--a:#0a84ff;--ok:#30d158;--b:#38383a}}
+:root[data-theme="dark"]{--bg:#000;--c:#1c1c1e;--t:#fff;--m:#98989f;--a:#0a84ff;--ok:#30d158;--b:#38383a}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{margin:0;background:var(--bg);color:var(--t);font:16px/1.45 -apple-system,system-ui,"Segoe UI",Roboto,sans-serif}
@@ -44,11 +44,23 @@ ul{margin:6px 0 0;padding-left:20px}li{margin-bottom:5px}
 .big{font-size:44px;font-weight:800;letter-spacing:-1px;line-height:1.1}
 summary{font-weight:700;padding:2px 0}
 .gd{background:var(--bg);border-radius:10px;padding:10px 12px;margin:8px 0;font-size:15px}.gd p{margin:0 0 4px}.gd ol{margin:4px 0 8px;padding-left:20px}.gd a{color:var(--a);font-weight:600}
+.lv{background:var(--bg);border-radius:10px;padding:8px 10px;margin-top:8px;font-size:15px}.lv div{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.mn{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}.mn[hidden]{display:none}.hs{background:var(--bg);border-radius:10px;padding:10px 12px;margin:8px 0;font-size:15px}.hs p{margin:0 0 6px}
+body{font-family:-apple-system,"SF Pro Text",system-ui,sans-serif}
+#bar,nav{background:color-mix(in srgb,var(--c) 80%,transparent);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);border-width:.5px}
+#bar.done{background:var(--a)}
+.card{border:0;border-radius:12px}
+h2{font-size:30px;font-weight:800;letter-spacing:-.6px;margin-bottom:6px}
+.ch{border:0;background:rgba(120,120,128,.16);font-weight:600}.ch.on{background:var(--a);color:#fff}
+input,select,textarea{border:0;background:rgba(120,120,128,.12)}
+.ck{border-radius:50%;width:44px;height:44px;justify-self:center}
+.btn{font-weight:600;border-radius:14px}.btn.g{background:rgba(120,120,128,.16);color:var(--a);border:0}
+nav button b{font-size:22px}.lv span{background:var(--c);border:1px solid var(--b);border-radius:8px;padding:3px 8px;font-weight:600}
 </style></head><body>
 <header id="bar"><div id="tm">0:00</div><div class="cs">
 <button class="ch" data-a="tm" data-s="60">1:00</button><button class="ch" data-a="tm" data-s="90">1:30</button><button class="ch" data-a="tm" data-s="120">2:00</button><button class="ch" data-a="tm" data-s="180">3:00</button><button class="ch" data-a="add">+30 s</button><button class="ch" data-a="tm" data-s="0">Nollaa</button></div></header>
 <main id="v"></main>
-<nav><button data-t="w"><b>🏋️</b>Treeni</button><button data-t="r"><b>🏃</b>Juoksu</button><button data-t="p"><b>📅</b>Ohjelma</button><button data-t="t"><b>💡</b>Vinkit</button></nav>
+<nav><button data-t="w"><b>🏋️</b>Treeni</button><button data-t="r"><b>🏃</b>Juoksu</button><button data-t="p"><b>📅</b>Ohjelma</button><button data-t="u"><b>👤</b>Profiili</button><button data-t="t"><b>💡</b>Vinkit</button></nav>
 <script>
 const $=s=>document.querySelector(s),K='omapt1';
 const td=()=>new Date(Date.now()-new Date().getTimezoneOffset()*6e4).toISOString().slice(0,10);
@@ -59,13 +71,14 @@ const fm=n=>String(Math.round(n*100)/100).replace('.',','),nu=v=>parseFloat(Stri
 const fd=d=>(+d.slice(8))+'.'+(+d.slice(5,7))+'.';
 const wk=()=>Math.floor((new Date(td())-new Date(S.start))/6048e5)+1;
 // liike: [nimet (tämä jakso|seuraava jakso), sarjat, toistot min, toistot max, painon askel, tauko s]
-const P={
+const DEF={
 A:['Päivä A: jalat ja työntö',[
 ['Back squat|Front squat',4,5,8,5,150],['Bench press|Incline dumbbell press',4,6,10,2.5,150],['Barbell row|Chest-supported row',3,8,10,2.5,120],['Dumbbell shoulder press|Machine shoulder press',3,8,12,2,90],['Triceps pushdown|Skull crusher',3,10,15,2.5,60],['Standing calf raise|Seated calf raise',3,10,15,5,60],['Cable crunch|Dumbbell side bend',3,10,15,2.5,60]]],
 B:['Päivä B: selkä ja takaketju',[
 ['Romanian deadlift|Conventional deadlift',4,5,8,5,150],['Wide-grip lat pulldown|Close-grip lat pulldown',4,6,10,2.5,150],['Machine chest press|Incline machine press',3,8,12,2.5,120],['Bulgarian split squat|Dumbbell lunge',3,8,12,2,120],['Dumbbell biceps curl|Hammer curl',3,10,15,2,60],['Lateral raise|Cable lateral raise',3,12,15,1,60],['Back extension|Weighted back extension',3,10,15,2.5,60]]],
 C:['Päivä C: koko vartalo',[
 ['Leg press|Goblet squat',4,8,12,5,120],['Overhead press|Arnold press',4,5,8,2.5,150],['Seated cable row|One-arm dumbbell row',3,8,12,2.5,90],['Lying leg curl|Barbell hip thrust',3,8,12,2.5,90],['Cable fly|Dumbbell fly',3,10,15,1,60],['Cable face pull|Rear delt dumbbell raise',3,12,15,1,60],['Hanging leg raise|Decline sit-up',3,10,15,1,60]]]};
+let P=S.prog||DEF;
 const nm=e=>{const a=e[0].split('|'),v=(S.block-1)%2;return[a[v],a[1-v]]};
 // ohjeet: lihakset|vaihe 1|vaihe 2|vaihe 3
 const G={
@@ -111,9 +124,112 @@ const G={
 'Rear delt dumbbell raise':'Takaolkapäät, yläselkä|Taivu eteen selkä suorana, painot roikkuvat|Nosta kädet sivulle, kyynärpäät hieman koukussa|Laske hallitusti',
 'Hanging leg raise':'Alavatsa, lonkankoukistajat|Ripu tangossa, vartalo vakaana|Nosta jalat lantion yläpuolelle suorina tai koukussa|Laske hallitusti ilman heilumista',
 'Decline sit-up':'Vatsalihakset|Aseta jalat penkin tukiin, vartalo kalteella alustalla|Nosta ylävartalo kohti polvia|Laske hallitusti, älä vedä niskasta'};
-const gd=n=>{const g=(G[n]||'').split('|');if(!g[0])return'';return`<p><b>Lihakset:</b> ${g[0]}</p><ol>${g.slice(1).map(x=>`<li>${x}</li>`).join('')}</ol><a href="https://www.youtube.com/results?search_query=${encodeURIComponent(n+' exercise form')}" target="_blank" rel="noopener">Katso esimerkkivideo</a>`};
+Object.assign(G,{
+'Hack squat':'Reidet, pakarat|Selkä tukea vasten, jalat levyllä hartioiden leveydellä|Laske polvet koukkuun hallitusti syvään|Työnnä ylös, älä lukitse polvia täysin',
+'Step-up':'Reidet, pakarat|Aseta toinen jalka penkille, käsipainot käsissä|Nouse ylös etujalan voimalla, älä työnnä takajalalla|Laske hallitusti alas ja vaihda jalkaa sarjan jälkeen',
+'Leg extension':'Etureidet|Säädä tuki nilkkojen yläpuolelle, selkä tuettuna|Ojenna polvet suoriksi ja pidä hetki|Laske hitaasti alas',
+'Dumbbell Romanian deadlift':'Takareidet, pakarat, selän ojentajat|Käsipainot reisien edessä, polvet hieman koukussa|Työnnä lantiota taakse ja laske painot säärten suuntaan, selkä suorana|Nouse ylös työntämällä lantio eteen',
+'Glute bridge':'Pakarat, takareidet|Makaa selällä, polvet koukussa, paino lantion päällä|Nosta lantio ylös, kunnes vartalo on suora|Purista pakaroita yläasennossa ja laske hallitusti',
+'Seated leg curl':'Takareidet|Säädä tuki nilkkojen yläpuolelle ja istu selkä tuettuna|Vedä kantapäät alas ja taakse|Palauta hitaasti',
+'Cable pull-through':'Pakarat, takareidet|Seiso selin taljaan, köysi jalkojen välistä käsissä|Työnnä lantio taakse, selkä suorana|Ojenna lantio eteen ja purista pakaroita',
+'Single-leg Romanian deadlift':'Takareidet, pakarat, tasapaino|Seiso yhdellä jalalla, käsipaino kädessä|Kallista vartalo eteen ja nosta vapaa jalka taakse|Palaa pystyyn ja pidä lantio suorassa',
+'Dumbbell bench press':'Rinta, olkapäiden etuosa, ojentajat|Makaa penkillä, painot rinnan sivuilla|Paina painot ylös rinnan yläpuolelle|Laske hallitusti rinnan tasolle',
+'Machine row':'Keskiselkä, lavat, hauikset|Tue rinta pehmusteeseen ja tartu kahvoihin|Vedä kyynärpäät taakse ja purista lapoja yhteen|Palauta hallitusti',
+'Straight-arm pulldown':'Leveä selkä|Seiso taljan edessä, kädet suorina ylhäällä|Paina tanko alas reisiin, kädet pysyvät suorina|Palauta hitaasti ylös',
+'Barbell curl':'Hauikset|Seiso tanko alaotteella, kyynärpäät kyljissä|Nosta tanko olkapäille ilman heilutusta|Laske hallitusti',
+'Cable curl':'Hauikset|Seiso taljan edessä, kyynärpäät kyljissä|Vedä kahva kohti olkapäitä|Laske hallitusti, jännitys säilyy koko liikeradan',
+'Incline dumbbell curl':'Hauikset|Istu kallistetulla penkillä, kädet roikkuvat suorina|Nosta painot olkapäille, kyynärpäät pysyvät paikallaan|Laske hitaasti täyteen venytykseen',
+'Overhead triceps extension':'Ojentajat|Pidä käsipainoa kahdella kädellä pään takana|Ojenna kädet ylös, kyynärpäät osoittavat eteen|Laske hallitusti pään taakse',
+'Dumbbell calf raise':'Pohkeet|Seiso toisella jalalla käsipaino kädessä, varvas korokkeella|Nouse varpaille ja pidä hetki|Laske hitaasti venytykseen'});
+const gd=n=>{const g=(G[n]||'Oma liike|Valitse paino, jolla jää 1–3 toistoa varaan|Tee liike hallitusti koko liikeradalla|Laske paino hitaammin kuin nostat').split('|');return`<p><b>Lihakset:</b> ${g[0]}</p><ol>${g.slice(1).map(x=>`<li>${x}</li>`).join('')}</ol><a href="https://www.youtube.com/results?search_query=${encodeURIComponent(n+' exercise form')}" target="_blank" rel="noopener">Katso esimerkkivideo</a>`};
 const gw=e=>{const[n,a]=nm(e);if(S.w[n])return S.w[n];const o=S.w[a];return o?{kg:r25(o.kg*.9),r:e[2]}:null};
-const nx=()=>{const l=S.hist.length&&S.hist[S.hist.length-1].day;return l?'ABC'[('ABC'.indexOf(l)+1)%3]:'A'};
+const nx=()=>{const l=S.hist.length&&S.hist[S.hist.length-1].day;const k=Object.keys(P);return l&&k.includes(l)?k[(k.indexOf(l)+1)%k.length]:k[0]};
+const LIB=`Back squat|jk|m|s|5|8|5|150|ap
+Front squat|jk|m|s|5|8|5|150|p
+Leg press|jk|m|s|8|12|5|120|
+Goblet squat|jk|m|b|8|12|2|90|
+Hack squat|jk|m|s|8|12|5|120|p
+Bulgarian split squat|jk|a|b|8|12|2|120|p
+Dumbbell lunge|jk|a|b|8|12|2|90|p
+Step-up|jk|a|b|8|12|2|90|p
+Leg extension|jk|a|s|10|15|2.5|60|p
+Romanian deadlift|jt|m|s|5|8|5|150|a
+Conventional deadlift|jt|m|s|5|8|5|150|a
+Dumbbell Romanian deadlift|jt|m|b|8|12|2|120|a
+Barbell hip thrust|jt|m|s|8|12|5|90|
+Glute bridge|jt|a|b|10|15|2|60|
+Lying leg curl|jt|a|s|8|12|2.5|90|
+Seated leg curl|jt|a|s|8|12|2.5|90|
+Cable pull-through|jt|a|s|10|15|2.5|60|
+Single-leg Romanian deadlift|jt|a|b|8|12|2|90|
+Bench press|rt|m|s|6|10|2.5|150|o
+Incline dumbbell press|rt|m|b|6|10|2|120|o
+Dumbbell bench press|rt|m|b|8|12|2|120|o
+Machine chest press|rt|m|s|8|12|2.5|120|
+Incline machine press|rt|a|s|8|12|2.5|90|
+Cable fly|rt|a|s|10|15|1|60|
+Dumbbell fly|rt|a|b|10|15|1|60|o
+Barbell row|sl|m|s|8|10|2.5|120|a
+Chest-supported row|sl|m|b|8|12|2|90|
+Wide-grip lat pulldown|sl|m|s|6|10|2.5|120|
+Close-grip lat pulldown|sl|m|s|8|12|2.5|90|
+One-arm dumbbell row|sl|m|b|8|12|2|90|
+Seated cable row|sl|a|s|8|12|2.5|90|
+Machine row|sl|a|s|8|12|2.5|90|
+Straight-arm pulldown|sl|a|s|10|15|2.5|60|
+Overhead press|ol|m|s|5|8|2.5|150|o
+Dumbbell shoulder press|ol|m|b|8|12|2|90|o
+Machine shoulder press|ol|m|s|8|12|2.5|90|
+Arnold press|ol|m|b|8|12|2|90|o
+Lateral raise|ol|a|b|12|15|1|60|
+Cable lateral raise|ol|a|s|12|15|1|60|
+Cable face pull|ol|a|s|12|15|1|60|
+Rear delt dumbbell raise|ol|a|b|12|15|1|60|
+Dumbbell biceps curl|hk|a|b|10|15|2|60|
+Hammer curl|hk|a|b|10|15|2|60|
+Barbell curl|hk|a|s|8|12|2.5|60|
+Cable curl|hk|a|s|10|15|2.5|60|
+Incline dumbbell curl|hk|a|b|10|15|1|60|
+Triceps pushdown|oj|a|s|10|15|2.5|60|
+Skull crusher|oj|a|s|8|12|2.5|60|
+Overhead triceps extension|oj|a|b|10|15|2|60|
+Standing calf raise|po|a|s|10|15|5|60|
+Seated calf raise|po|a|s|10|15|5|60|
+Dumbbell calf raise|po|a|b|12|20|2|60|
+Cable crunch|va|a|s|10|15|2.5|60|
+Dumbbell side bend|va|a|b|10|15|2.5|60|
+Hanging leg raise|va|a|b|8|15|1|60|
+Decline sit-up|va|a|b|10|15|1|60|`.split('\n').map(r=>{const[n,g,k,q,lo,hi,st,rs,f]=r.split('|');return{n,g,k,q,lo:+lo,hi:+hi,st:+st,rs:+rs,f:f||''}});
+const GN={jk:'Jalat, etureidet',jt:'Takareidet ja pakarat',rt:'Rinta',sl:'Selkä',ol:'Olkapäät',hk:'Hauikset',oj:'Ojentajat',po:'Pohkeet',va:'Vatsa'},FK={jk:'j',jt:'j',po:'j',sl:'s',rt:'r',ol:'o',hk:'k',oj:'k',va:'v'};
+const TM={f:['jkm4 rtm4 slm3 ola3 oja3 poa3 vaa3','jtm4 slm4 rta3 jka3 hka3 ola3 vaa3','jkm4 olm4 sla3 jta3 rta3 ola3 hka3'],u:['rtm4 slm4 olm3 sla3 rta3 hka3 oja3','olm4 slm4 rta4 ola3 sla3 oja3 hka3'],l:['jkm4 jtm4 jka3 jta3 poa3 vaa3','jtm4 jkm4 jka3 jta3 poa3 vaa3']};
+let WN=new Set();
+const OB={q:'',sp:'n',rd:'1',ag:0,open:0,exp:'a',days:'3',eq:'s',goal:'b',foc:[],lim:[],w:'',h:'',r:fm(S.run0)};
+function pk(g,k,o,used){const ok=x=>x.g==g&&(o.eq=='s'||x.q=='b')&&!x.f.split('').some(c=>o.lim.includes(c));let c=LIB.filter(ok);if(!c.length)c=LIB.filter(x=>x.g==g);const p=c.filter(x=>x.k==k).concat(c.filter(x=>x.k!=k)).sort((x,y)=>WN.has(y.n)-WN.has(x.n)),u=p.filter(x=>!used.has(x.n)),l=u.length>1?u:p,b=l[1]||l[0];used.add(l[0].n);used.add(b.n);return[l[0],b]}
+function gen(o){const kw={penkki:'Bench press',kyykky:'Back squat',maastaveto:'Conventional deadlift',pystypunnerrus:'Overhead press',soutu:'Barbell row',ylätalja:'Wide-grip lat pulldown',leuka:'Wide-grip lat pulldown',lonkannosto:'Barbell hip thrust',hip:'Barbell hip thrust',jalkaprässi:'Leg press',hauiksen:'Barbell curl',ojentajan:'Triceps pushdown'},mg={rinta:'r',selkä:'s',pakar:'g',olka:'o',hauis:'k',ojentaj:'k',pohje:'j',vatsa:'v',reis:'j',jalka:'j'},tx=(o.q||'').toLowerCase();WN=new Set();LIB.forEach(x=>{if(tx.includes(x.n.toLowerCase()))WN.add(x.n)});for(const k in kw)if(tx.includes(k))WN.add(kw[k]);const fc=new Set(o.foc);for(const k in mg)if(tx.includes(k))fc.add(mg[k]);if(o.sp=='r'){fc.add('g');fc.add('v')}if(o.sp=='m'){fc.add('v');fc.add('s')}o={...o,foc:[...fc]};const used=new Set(),t=o.days==4?[TM.u[0],TM.l[0],TM.u[1],TM.l[1]]:TM.f.slice(0,o.days),r={};
+t.forEach((d,i)=>{r['ABCD'[i]]=['Päivä '+'ABCD'[i]+': '+(o.days==4?(i%2?'alakroppa':'yläkroppa'):'kokovartalo'),d.split(' ').map(s=>{const g=s.slice(0,2),k=s[2];let n=+s[3];if(o.exp=='a')n--;if(k=='a'&&(o.foc.includes(FK[g])||(g=='jt'&&o.foc.includes('g'))))n=Math.min(5,n+1);const[a,b]=pk(g,k,o,used);if(WN.has(a.n))n=Math.min(5,n+1);let lo=a.lo,hi=a.hi,rs=a.rs;if(o.goal=='v'){[lo,hi]=k=='m'?[3,6]:[6,10];if(k=='m')rs=180}else if(o.goal=='m')[lo,hi]=k=='m'?[6,10]:[10,15];return[a.n+'|'+b.n,n,lo,hi,a.st,rs]})]});return r}
+function vo(ed){const q=(k,t,o,m)=>`<h3 style="margin:14px 0 6px">${t}</h3><div class="cs" style="flex-wrap:wrap;overflow:visible">${o.map(([v,l])=>{const on=m?OB[k].includes(v):OB[k]==v;return`<button class="ch${on?' on':''}" data-a="ob" data-k="${k}" data-v="${v}" data-m="${m?1:''}">${l}</button>`}).join('')}</div>`;
+return`<div class="card">${ed?'<h2>Oma profiili</h2><p class="m">Muuta tietoja, jos haluat vaihtaa treeniä (esim. kotitreeniin tai treenipäivien määrää). Päivitys luo uuden ohjelman ja aloittaa uuden 6 viikon jakson. Painot säilyvät liikkeen nimen mukaan.</p>':'<h2>Tervetuloa</h2><p class="m">Vastaa muutamaan kysymykseen, niin sovellus muodostaa sinulle ohjelman. Voit muuttaa vastauksia myöhemmin Profiili-välilehdellä.</p>'}`+q('exp','Kokemus salitreenistä',[['a','Aloittelija'],['b','Jonkin verran'],['c','Kokenut']])+q('days','Treenipäiviä viikossa',[['2','2'],['3','3'],['4','4']])+q('eq','Missä treenaat',[['s','Kuntosalilla'],['h','Kotona käsipainoilla']])+q('goal','Tavoite',[['m','Lihaskasvu'],['v','Voima'],['b','Molemmat']])+q('foc','Painopisteet (valinnainen)',[['j','Jalat'],['s','Selkä'],['r','Rinta'],['o','Olkapäät'],['k','Kädet'],['g','Pakarat'],['v','Vatsa']],1)+q('sp','Tue lajia',[['n','Ei'],['r','Juoksu'],['m','Muu laji']])+q('rd','Juoksupäiviä viikossa',[['0','0'],['1','1'],['2','2'],['3','3']])+`<h3 style="margin:14px 0 6px">Haluan kehittää (vapaa teksti)</h3><input id="oq" placeholder="esim. penkkipunnerrus, pakarat" value="${OB.q}"><p class="m">Sovellus tunnistaa tuttuja liikkeitä ja lihasryhmiä ja painottaa ne ohjelmassa.</p>`+q('lim','Rajoitteet tai vammat (valinnainen)',[['a','Alaselkä'],['p','Polvet'],['o','Olkapäät']],1)+`${S.ag?'':`<label class="m" style="display:flex;gap:10px;align-items:flex-start;margin-top:14px"><input type="checkbox" id="oa" style="width:26px;height:26px;flex:none"${OB.ag?' checked':''}><span>Ymmärrän, että treenaan omalla vastuullani. Sovellus antaa yleisiä harjoitteluohjeita, ei lääketieteellistä neuvontaa, eikä se korvaa lääkärin tai valmentajan ohjausta. Keskeytän treenin kivun tai huonovointisuuden vuoksi. Sovelluksen tekijä ei vastaa treenaamisesta aiheutuvista vahingoista siinä laajuudessa kuin laki sallii.</span></label>`}<p class="m" style="margin-top:8px">Ohjelma ei korvaa lääkärin tai fysioterapeutin arviota.</p><div class="row" style="grid-template-columns:1fr 1fr 1fr"><label class="m">Paino (kg)<input id="ow" inputmode="decimal" value="${OB.w}"></label><label class="m">Pituus (cm)<input id="oh" inputmode="numeric" value="${OB.h}"></label><label class="m">Juoksu (km)<input id="or" inputmode="decimal" value="${OB.r}"></label></div><button class="btn" data-a="ogo">${ed?'Tallenna ja päivitä ohjelma':'Luo ohjelma'}</button>${ed?'':'<button class="btn g" data-a="oskip">Käytä oletusohjelmaa</button>'}</div>`}
+const pf=()=>S.prof?`${{a:'Aloittelija',b:'Jonkin verran kokemusta',c:'Kokenut'}[S.prof.exp]}, ${S.prof.days} treeniä viikossa, ${S.prof.eq=='s'?'kuntosali':'koti'}, tavoite: ${{m:'lihaskasvu',v:'voima',b:'lihaskasvu ja voima'}[S.prof.goal]}${S.prof.w?', '+S.prof.w+' kg':''}${S.prof.h?', '+S.prof.h+' cm':''}`:'Käytössä on oletusohjelma. Luo oma ohjelma alkutiedoillasi.';
+const ap=()=>{const r=document.documentElement;if(S.theme=='l')r.dataset.theme='light';else if(S.theme=='d')r.dataset.theme='dark';else r.removeAttribute('data-theme')};
+const ld=()=>Object.assign(OB,S.prof?JSON.parse(JSON.stringify(S.prof)):{},{days:String(S.prof?S.prof.days:3),r:fm(S.run0)});
+const tg=e=>{const w=gw(e);return w?`<div class="m" style="display:block;margin-top:6px">Tavoite tänään: <b>${fm(w.kg)} kg × ${w.r}</b>${w.t?'. Ohje: '+w.t:''}</div>`:''};
+const lc=(v,u)=>{if(!v.length)return'<p class="m">Ei vielä tietoja.</p>';const w=300,h=80,mx=Math.max(...v),mi=Math.min(...v),pt=v.map((y,i)=>[v.length>1?6+i*(w-12)/(v.length-1):w/2,h-8-(mx>mi?(y-mi)/(mx-mi)*(h-16):(h-16)/2)]);return`<svg viewBox="0 0 ${w} ${h}" width="100%" height="${h}"><polyline fill="none" stroke="var(--a)" stroke-width="2.5" points="${pt.map(p=>p.join(',')).join(' ')}"/>${pt.map(p=>`<circle cx="${p[0]}" cy="${p[1]}" r="3.5" fill="var(--a)"/>`).join('')}</svg><div class="m">${fm(mi)}–${fm(mx)} ${u}</div>`};
+function vg(){const ns=[...new Set(S.hist.flatMap(h=>Object.keys(h.x)))],wv={};S.hist.forEach(h=>{const d=new Date(h.d),k=h.d.slice(0,4)+'-'+Math.ceil(((d-new Date(d.getFullYear(),0,1))/864e5+1)/7);let v=0;for(const n in h.x)h.x[n].forEach(s=>v+=s.k*s.r);wv[k]=(wv[k]||0)+v});
+return`<div class="card"><h3>Edistyminen</h3>${ns.length?`<select id="gs"><option value="">Valitse liike</option>${ns.map(n=>`<option>${n}</option>`).join('')}</select><div id="gx" class="m" style="margin-top:8px">Valitse liike nähdäksesi kehityksen.</div>`:'<p class="m">Kaaviot ilmestyvät, kun olet tallentanut treenejä.</p>'}<h3 style="margin-top:14px">Viikoittainen kokonaiskuorma</h3>${lc(Object.values(wv).map(Math.round),'kg')}<h3 style="margin-top:14px">Juoksumatkat</h3>${lc(S.runs.map(r=>r.km),'km')}</div>`}
+function vl(){return`<div class="card"><h3>Ohjelmakirjasto</h3><input id="ln" placeholder="Ohjelman nimi"><button class="btn" data-a="ls">Tallenna nykyinen ohjelma</button>${(S.lib||[]).map((l,i)=>`<div class="row" style="grid-template-columns:1fr auto auto"><b>${l.n}</b><button class="ch" data-a="lu" data-x="${i}">Käytä</button><button class="ch" data-a="lx" data-x="${i}">Poista</button></div>`).join('')}</div><div class="card"><h3>Rakenna oma ohjelma</h3><p class="m">Luo tyhjä ohjelma ja lisää liikkeet itse Lisää liike -kortista. Tallenna nykyinen ohjelma kirjastoon ensin, sillä uusi ohjelma korvaa sen. Valitse treenipäivien määrä:</p><div class="cs" style="margin-top:8px">${[2,3,4,5,6].map(n=>`<button class="ch" data-a="eb" data-n="${n}">${n} päivää</button>`).join('')}</div></div>`}
+function vu(){return vo(1)+`<div class="card"><h3>Teema</h3><div class="cs" style="margin-top:8px">${[['a','Automaattinen'],['l','Vaalea'],['d','Tumma']].map(([v,l])=>`<button class="ch${(S.theme||'a')==v?' on':''}" data-a="th" data-v="${v}">${l}</button>`).join('')}</div><p class="m" style="margin-top:8px">Automaattinen seuraa puhelimen asetusta.</p></div>`}
+function vx(){return`<div class="card"><h3>Lisää liike ohjelmaan</h3><p class="m">Valitse liike kirjastosta tai kirjoita oma liike.</p><input id="an" list="lib" placeholder="Liikkeen nimi" autocomplete="off"><select id="ad" style="margin-top:8px">${Object.keys(P).map(k=>`<option value="${k}">${P[k][0]}</option>`).join('')}</select><button class="btn" data-a="ad">Lisää</button><datalist id="lib">${LIB.map(x=>`<option value="${x.n}">`).join('')}</datalist></div><details class="card"><summary>Liikekirjasto (${LIB.length} liikettä)</summary>${Object.keys(GN).map(g=>`<p style="margin:10px 0 2px"><b>${GN[g]}</b></p><div class="m">${LIB.filter(x=>x.g==g).map(x=>x.n).join(', ')}</div>`).join('')}</details>`}
+const ev=(e,i)=>S.draft&&S.draft.sw&&S.draft.sw[i]?[e[0].split('|').reverse().join('|'),...e.slice(1)]:e;
+const e1=s=>s.k*(1+s.r/30),pb=(n,ss)=>{const p=Math.max(0,...S.hist.filter(h=>h.x[n]).flatMap(h=>h.x[n].map(e1)));return p>0&&Math.max(...ss.map(e1))>p};
+function hx(n){const L=S.hist.filter(h=>h.x[n]).map(h=>({d:h.d,s:h.x[n]}));if(!L.length)return'<p class="m">Ei vielä kirjattuja tuloksia.</p>';
+const tp=L.map(l=>Math.max(...l.s.map(s=>s.k)));let b=null;L.forEach(l=>l.s.forEach(s=>{if(!b||e1(s)>e1(b))b={k:s.k,r:s.r,d:l.d}}));
+const mx=Math.max(...tp),mi=Math.min(...tp),w=300,h=70,pt=tp.map((v,i)=>[tp.length>1?5+i*(w-10)/(tp.length-1):w/2,h-8-(mx>mi?(v-mi)/(mx-mi)*(h-16):(h-16)/2)]);
+return`<p><b>Paras sarja:</b> ${fm(b.k)} kg × ${b.r} (${fd(b.d)})</p><svg viewBox="0 0 ${w} ${h}" width="100%" height="${h}"><polyline fill="none" stroke="var(--a)" stroke-width="2.5" points="${pt.map(p=>p.join(',')).join(' ')}"/>${pt.map(p=>`<circle cx="${p[0]}" cy="${p[1]}" r="3.5" fill="var(--a)"/>`).join('')}</svg><div class="m">Korkein paino treeniä kohti (kg)</div><ul>${L.slice(-6).reverse().map(l=>`<li>${fd(l.d)}: ${l.s.map(s=>fm(s.k)+' × '+s.r).join(', ')}</li>`).join('')}</ul>`}
+function fb(){const m={};S.hist.filter(h=>h.d>=S.start).forEach(h=>{for(const n in h.x)(m[n]=m[n]||[]).push(Math.max(...h.x[n].map(s=>s.k)))});const u=[],f=[];for(const n in m){const a=m[n];if(a.length<2)continue;const d=a[a.length-1]-a[0];d>0?u.push(n+' +'+fm(d)+' kg'):f.push(n)}
+return(u.length?'<p><b>Kehittyneet liikkeet</b></p><ul>'+u.map(x=>'<li>'+x+'</li>').join('')+'</ul>':'')+(f.length?'<p><b>Paino ei noussut</b></p><div class="m">'+f.join(', ')+'. Tarkista näissä tekniikka, palautuminen ja että sarjat tuntuvat riittävän raskailta.</div>':'')}
+async function sh(){const j=JSON.stringify(S);try{const f=new File([j],'oma-pt-varmuuskopio.json',{type:'application/json'});if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f]});return}$('#bk').value=j;$('#bk').select()}catch(e){}}
+const lo=n=>{for(let i=S.hist.length;i--;)if(S.hist[i].x[n])return{d:S.hist[i].d,s:S.hist[i].x[n]};return null};
+const lv=e=>{const[n,a]=nm(e);let l=lo(n),f='';if(!l&&(l=lo(a)))f=' ('+a+')';if(!l)return'';return`<div class="lv"><b>Viimeksi ${fd(l.d)}${f}</b><div>${l.s.map(s=>`<span>${fm(s.k)} kg × ${s.r}</span>`).join('')}</div>${tg(e)}</div>`};;
 function mk(day){const dl=wk()==6;return{day,d:td(),x:P[day][1].map(e=>{const w=gw(e),n=dl?Math.max(2,e[1]-1):e[1],kg=w?(dl?r25(w.kg*.9):w.kg):'';return Array.from({length:n},()=>({k:kg,r:w?w.r:'',d:0}))})}}
 // ajastin
 let T={e:0,d:0},AC;
@@ -125,39 +241,41 @@ setInterval(tk,250);
 // näkymät
 let tab='w';
 function vw(){
+if(OB.open||(!S.prof&&!S.hist.length&&!S.skip))return vo();
 const w=wk(),dl=w==6;let h='';
 if(S.msg)h+=`<div class="card">${S.msg}<button class="btn" data-a="cm">Selvä</button></div>`;
 if(w>6){const n=S.hist.filter(x=>x.d>=S.start).length,r=S.runs.filter(x=>x.d>=S.start).length;
-return h+`<div class="card"><h2>Jakso ${S.block} on valmis</h2><p>Teit jakson aikana ${n} salitreeniä ja ${r} juoksua. Seuraava jakso käyttää tuloksiasi lähtökohtana: osa liikkeistä vaihtuu variaatioihin ja juoksumatka kasvaa.</p><button class="btn" data-a="nb">Aloita jakso ${S.block+1}</button></div>`}
+return h+`<div class="card"><h2>Jakso ${S.block} on valmis</h2><p>Teit jakson aikana ${n} salitreeniä ja ${r} juoksua. Seuraava jakso käyttää tuloksiasi lähtökohtana: osa liikkeistä vaihtuu variaatioihin ja juoksumatka kasvaa.</p>${fb()}<button class="btn" data-a="nb">Aloita jakso ${S.block+1}</button></div>`}
+if(!S.hist.length&&!S.hi)h+=`<div class="card"><h3>Näin aloitat</h3><ul><li>Kirjaa jokaisesta sarjasta paino ja toistot ja merkitse se valmiiksi ✓-napilla.</li><li>✓ käynnistää tauon ajastimen ylhäällä.</li><li>Ensimmäisellä kerralla valitse kevyt paino. Sovellus ehdottaa painot jatkossa.</li><li>⋯-valikosta voit lisätä sarjan, vaihtaa liikkeen, ohittaa sen tai katsoa liikkeen historian.</li></ul><button class="btn" data-a="hi">Selvä</button></div>`;
 if(!S.draft)S.draft=mk(nx());
 const d=S.draft;
 h+=`<div class="card"><h2>Jakso ${S.block}, viikko ${w}/6</h2><p class="m">${dl?'Kevennysviikko: sarjoja on vähemmän ja painot ovat noin 10 % kevyempiä. Anna kehon palautua.':'Kuorma kasvaa, kun saavutat toistotavoitteen. Jätä jokaiseen sarjaan 1–3 toistoa varaan.'} Kesto noin 80–90 min.</p>
-<div class="cs" style="margin-top:8px">${['A','B','C'].map(x=>`<button class="ch${x==d.day?' on':''}" data-a="day" data-d="${x}">Päivä ${x}</button>`).join('')}</div></div>
+<div class="cs" style="margin-top:8px">${Object.keys(P).map(x=>`<button class="ch${x==d.day?' on':''}" data-a="day" data-d="${x}">Päivä ${x}</button>`).join('')}</div></div>
 <details class="card"><summary>Lämmittely ja ohjeet</summary><ul><li>Kevyt kardio 5 min (soutulaite, crosstrainer tai reipas kävely).</li><li>Liikkuvuus 3 min: lonkat, olkapäät, rintaranka.</li><li>Ensimmäiseen liikkeeseen 2–3 lämmittelysarjaa (noin 50 %, 70 % ja 85 % työpainosta).</li><li>Merkitse sarja valmiiksi ✓-napilla, niin tauon ajastin käynnistyy itse.</li></ul></details>
-<h2 style="margin:4px 2px 10px">${P[d.day][0]}</h2>`;
-P[d.day][1].forEach((e,i)=>{const[n]=nm(e),w0=gw(e);
-h+=`<div class="card"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px"><h3>${n}</h3><button class="ch" data-a="gd">Ohje</button></div><div class="gd" hidden>${gd(n)}</div><div class="m">${d.x[i].length} × ${e[2]}–${e[3]} toistoa, tauko ${fm(e[5]/60)} min${S.last[n]?'<br>Viimeksi (kg × toistot): '+S.last[n]:''}</div>${w0?'':'<div class="m" style="margin-top:6px">Valitse kevyt aloituspaino, jolla jää 2–3 toistoa varaan.</div>'}<div class="row m"><span></span><span>Paino (kg)</span><span>Toistot</span><span></span></div>`;
+<h2 style="margin:4px 2px 10px">${P[d.day][0]}</h2>${P[d.day][1].length?'':'<p class="m">Tässä päivässä ei ole vielä liikkeitä. Lisää ne Ohjelma-välilehdellä.</p>'}`;
+P[d.day][1].forEach((e0,i)=>{const e=ev(e0,i),[n]=nm(e),w0=gw(e);if(d.sk&&d.sk[i]){h+=`<div class="card" style="display:flex;justify-content:space-between;align-items:center;gap:8px"><h3 style="margin:0;color:var(--m)">${n} (ohitettu)</h3><button class="ch" data-a="sk" data-x="${i}">Palauta</button></div>`;return}
+h+=`<div class="card"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px"><h3>${n}</h3><span style="display:flex;gap:6px"><button class="ch" data-a="gd">Ohje</button><button class="ch" data-a="mn" aria-label="Lisää">⋯</button></span></div><div class="gd" hidden>${gd(n)}</div><div class="mn" hidden><button class="ch" data-a="as" data-x="${i}">+ Sarja</button><button class="ch" data-a="rm" data-x="${i}">− Sarja</button><button class="ch" data-a="sw" data-x="${i}">Vaihda liike</button><button class="ch" data-a="sk" data-x="${i}">Ohita</button><button class="ch" data-a="hs" data-n="${n}">Historia</button></div><div class="hs" hidden></div><div class="m">${d.x[i].length} × ${e[2]}–${e[3]} toistoa, tauko ${fm(e[5]/60)} min</div>${lv(e)}${w0?'':'<div class="m" style="margin-top:6px">Valitse kevyt aloituspaino, jolla jää 2–3 toistoa varaan.</div>'}<div class="row m"><span></span><span>Paino (kg)</span><span>Toistot</span><span></span></div>`;
 d.x[i].forEach((s,j)=>h+=`<div class="row"><b>${j+1}</b><input inputmode="decimal" data-x="${i}" data-s="${j}" data-f="k" value="${s.k}" aria-label="Paino"><input inputmode="numeric" data-x="${i}" data-s="${j}" data-f="r" value="${s.r}" aria-label="Toistot"><button class="ck${s.d?' on':''}" data-a="ck" data-x="${i}" data-s="${j}" aria-label="Sarja valmis">✓</button></div>`);
 h+='</div>'});
 return h+`<button class="btn" data-a="fin">Tallenna treeni</button><button class="btn g" data-a="drop">Nollaa syötteet</button>`}
-function fin(){const d=S.draft,dl=wk()==6,lg={d:d.d,day:d.day,x:{}},o=[];
-P[d.day][1].forEach((e,i)=>{const[n]=nm(e),ss=d.x[i].filter(s=>s.d&&nu(s.r)>0).map(s=>({k:nu(s.k),r:nu(s.r)}));if(!ss.length)return;
-lg.x[n]=ss;S.last[n]=ss.map(s=>fm(s.k)+' × '+s.r).join(', ');if(dl)return;
+function fin(){const d=S.draft,dl=wk()==6,lg={d:d.d,day:d.day,x:{}},o=[],pr=[];
+P[d.day][1].forEach((e0,i)=>{const e=ev(e0,i),[n]=nm(e),ss=(d.sk&&d.sk[i]?[]:d.x[i]).filter(s=>s.d&&nu(s.r)>0).map(s=>({k:nu(s.k),r:nu(s.r)}));if(!ss.length)return;
+lg.x[n]=ss;if(pb(n,ss))pr.push(n);S.last[n]=ss.map(s=>fm(s.k)+' × '+s.r).join(', ');if(dl)return;
 const k=ss[ss.length-1].k,m=Math.min(...ss.map(s=>s.r));let nk=k,nr=e[2],t;
 if(ss.length>=e[1]&&m>=e[3]){nk=k+e[4];S.f[n]=0;t='nosta painoa: '+fm(nk)+' kg'}
 else if(m<e[2]){S.f[n]=(S.f[n]||0)+1;if(S.f[n]>=2){nk=r25(k*.9);S.f[n]=0;t='kevennä painoa: '+fm(nk)+' kg'}else t='pysy painossa '+fm(k)+' kg ja hae vähintään '+e[2]+' toistoa'}
 else{S.f[n]=0;nr=Math.min(e[3],m+1);t='pysy painossa '+fm(k)+' kg, tavoite '+nr+' toistoa'}
-S.w[n]={kg:nk,r:nr};o.push(`<li><b>${n}</b>: ${t}</li>`)});
+S.w[n]={kg:nk,r:nr,t};o.push(`<li><b>${n}</b>: ${t}</li>`)});
 if(!Object.keys(lg.x).length){S.msg='<h3>Ei tallennettavaa</h3><p class="m">Merkitse vähintään yksi sarja valmiiksi ✓-napilla.</p>';sv();R();return}
 S.hist.push(lg);S.draft=null;
-S.msg='<h3>Treeni tallennettu</h3>'+(dl?'<p class="m">Kevennysviikolla painoja ei muuteta.</p>':'<p class="m">Seuraavalla kerralla:</p><ul>'+o.join('')+'</ul>');
+S.msg='<h3>Treeni tallennettu</h3>'+(pr.length?'<p>🏆 Uusi ennätys: <b>'+pr.join(', ')+'</b></p>':'')+(dl?'<p class="m">Kevennysviikolla painoja ei muuteta.</p>':'<p class="m">Seuraavalla kerralla:</p><ul>'+o.join('')+'</ul>');
 sv();R();scrollTo(0,0)}
 const rp=b=>{const s=Math.min(S.run0+(b-1)*1.5,8);return[0,.5,1,1.5,2,0].map(x=>Math.min(10,s+x))};
 const pace=(k,m)=>{const p=m/k;return Math.floor(p)+':'+String(Math.round(p%1*60)%60).padStart(2,'0')+' /km'};
 function rt(){const p=rp(S.block),w=Math.min(wk(),6),l=S.runs[S.runs.length-1];let t=p[w-1];if(l&&l.rpe>=9&&w<6)t=Math.min(t,l.km);return t}
-function vr(){const p=rp(S.block),w=Math.min(wk(),6),t=rt();
+function vr(){if(S.prof&&+S.prof.rd===0)return'<div class="card"><h2>Juoksu</h2><p class="m">Juoksu ei kuulu nykyiseen ohjelmaasi. Voit lisätä juoksupäiviä Profiili-välilehdellä.</p></div>';const p=rp(S.block),w=Math.min(wk(),6),t=rt();
 let h=`<div class="card"><h2>Juoksu viikolla ${w}/6</h2><div class="big">${fm(t)} km</div><p class="m">${w==6?'Kevennysviikko: rauhallinen, lyhyempi lenkki.':'Rauhallinen vauhti, jolla pystyt vielä puhumaan.'}${w>=4&&w<6&&S.block>1?' Voit juosta lenkin viimeiset 2 km hieman reippaammin.':''}${t>=10?' Olet saavuttanut 10 km. Jatkossa tavoite on parantaa vauhtia.':''}</p>
-<div class="wk">${p.map((x,i)=>`<i class="${i<w-1?'d':i==w-1?'p':''}"></i>`).join('')}</div><div class="m">Jakson matkat (km): ${p.map(fm).join(', ')}</div></div>
+<div class="wk">${p.map((x,i)=>`<i class="${i<w-1?'d':i==w-1?'p':''}"></i>`).join('')}</div><div class="m">Jakson matkat (km): ${p.map(fm).join(', ')}</div>${S.prof&&+S.prof.rd>1?'<p class="m">Viikossa on '+S.prof.rd+' juoksua: tee yllä oleva matka pisimmällä lenkillä ja muut noin 60 % pituudesta.</p>':''}</div>
 <div class="card"><h3>Kirjaa juoksu</h3><div class="row" style="grid-template-columns:1fr 1fr"><label class="m">Matka (km)<input id="rk" inputmode="decimal" value="${fm(t)}"></label><label class="m">Aika (min)<input id="rm" inputmode="decimal"></label></div>
 <label class="m" style="display:block;margin-top:8px">Rasittavuus (1 = hyvin kevyt, 10 = maksimi)<select id="rr">${[1,2,3,4,5,6,7,8,9,10].map(x=>`<option${x==6?' selected':''}>${x}</option>`).join('')}</select></label><button class="btn" data-a="run">Tallenna juoksu</button>
 <p class="m">Jos rasittavuus on 9 tai 10, seuraavalla viikolla matka pysyy samana.</p></div>
@@ -167,9 +285,10 @@ return h}
 function vp(){const w=wk();let h=`<div class="card"><h2>Jakson rakenne</h2><p>Yksi jakso kestää <b>6 viikkoa</b>: viikot 1–5 kuorma kasvaa ja viikko 6 on kevennysviikko, jolloin sarjoja on vähemmän ja painot kevyempiä. Sen jälkeen sovellus luo uuden jakson: osa liikkeistä vaihtuu variaatioihin, aloituspainot lasketaan tuloksistasi ja juoksumatka kasvaa. Näin eteneminen jatkaa loputtomiin.</p>
 <div class="wk">${[1,2,3,4,5,6].map(i=>`<i class="${i<w?'d':i==w?'p':''}"></i>`).join('')}</div><div class="m">Jakso ${S.block}, viikko ${Math.min(w,6)}/6${w>6?' (jakso valmis)':''}. Alkoi ${fd(S.start)}.</div></div>
 <div class="card"><h3>Viikkorytmi</h3><ul><li>Ma: sali (seuraava päivä A, B tai C)</li><li>Ke: sali</li><li>Pe: sali (valinnainen kolmas kerta)</li><li>La tai Su: juoksu</li></ul><p class="m">Jos ehdit vain kaksi salikertaa, sovellus jatkaa kiertoa A, B, C, joten kaikki liikkeet tulevat vuorollaan. Aja juoksu mieluiten eri päivänä kuin jalkatreeni.</p></div>
-<div class="card"><h3>Tämän jakson liikkeet</h3>${Object.keys(P).map(k=>`<p style="margin:8px 0 2px"><b>${P[k][0]}</b></p><div class="m">${P[k][1].map(e=>nm(e)[0]).join(', ')}</div>`).join('')}</div>`;
-if(S.hist.length)h+=`<div class="card"><h3>Treenihistoria</h3><ul>${S.hist.slice(-8).reverse().map(x=>{let v=0,n=0;for(const k in x.x)x.x[k].forEach(s=>{v+=s.k*s.r;n++});return`<li>${fd(x.d)}: päivä ${x.day}, ${n} sarjaa, nostettu yhteensä ${Math.round(v)} kg</li>`}).join('')}</ul></div>`;
-return h+`<div class="card"><h3>Varmuuskopio</h3><p class="m">Tiedot tallentuvat tämän laitteen selaimeen. Kopioi varmuuskopio talteen esimerkiksi muistiinpanoihin ja palauta se tarvittaessa.</p><textarea id="bk" rows="3" placeholder="Liitä varmuuskopio tähän"></textarea><button class="btn" data-a="cp">Kopioi varmuuskopio</button><button class="btn g" data-a="rs">Palauta liitetystä tekstistä</button><button class="btn g" data-a="nb">Aloita uusi jakso nyt</button></div>`}
+<div class="card"><h3>Tämän jakson liikkeet</h3><p class="m">Poista liike napauttamalla sitä kahdesti.</p>${Object.keys(P).map(k=>`<p style="margin:8px 0 2px"><b>${P[k][0]}</b></p><div class="cs" style="flex-wrap:wrap;overflow:visible">${P[k][1].map((e,i)=>`<button class="ch" data-a="rx" data-k="${k}" data-x="${i}">${nm(e)[0]} ✕</button>`).join('')}</div>`).join('')}</div>`;
+h+=vx();h+=vg();h+=vl();
+if(S.hist.length)h+=`<div class="card"><h3>Treenihistoria</h3><ul>${S.hist.map((x,i)=>[x,i]).slice(-30).reverse().map(([x,i])=>{let v=0,n=0;for(const k in x.x)x.x[k].forEach(s=>{v+=s.k*s.r;n++});return`<li><details><summary>${fd(x.d)}: päivä ${x.day}, ${n} sarjaa, ${Math.round(v)} kg</summary>${Object.keys(x.x).map(k=>`<div class="m"><b>${k}</b>: ${x.x[k].map(s=>fm(s.k)+' × '+s.r).join(', ')}</div>`).join('')}<button class="ch" style="margin-top:8px" data-a="dh" data-x="${i}">Poista</button></details></li>`}).join('')}</ul></div>`;
+return h+`<div class="card"><h3>Varmuuskopio</h3><p class="m">Tiedot tallentuvat tämän laitteen selaimeen. Kopioi varmuuskopio talteen esimerkiksi muistiinpanoihin ja palauta se tarvittaessa.</p><button class="btn" data-a="sh">Jaa varmuuskopio tiedostona</button><label class="btn g" style="text-align:center">Palauta tiedostosta<input id="bf" type="file" accept=".json,application/json" hidden></label><textarea id="bk" rows="3" placeholder="Tai liitä varmuuskopio tähän" style="margin-top:10px"></textarea><button class="btn g" data-a="cp">Kopioi varmuuskopio tekstinä</button><button class="btn g" data-a="rs">Palauta liitetystä tekstistä</button><button class="btn g" data-a="nb">Aloita uusi jakso nyt</button></div>`}
 function vt(){return`<div class="card"><h2>Vinkit</h2><ul>
 <li><b>Uni:</b> 7–9 tuntia yössä. Lihas kasvaa levossa, ei salilla.</li>
 <li><b>Proteiini:</b> noin 1,6–2,2 g painokiloa kohti päivässä. Lihaskasvuun tarvitaan myös riittävästi ruokaa, pieni energiaylijäämä auttaa.</li>
@@ -181,16 +300,36 @@ function vt(){return`<div class="card"><h2>Vinkit</h2><ul>
 <li><b>Juoksukengät:</b> vaihda 600–800 km välein. Lisää viikkomatkaa korkeintaan 10 % kerrallaan.</li>
 <li><b>Terveys:</b> jos sinulla on sairaus tai vamma, keskustele ensin lääkärin tai fysioterapeutin kanssa.</li></ul>
 <p class="m">Ajastin toimii oikein, vaikka vaihtaisit hetkeksi toiseen sovellukseen. Ääni soi vain, kun tämä sivu on auki.</p></div>`}
-function R(){$('#v').innerHTML={w:vw,r:vr,p:vp,t:vt}[tab]();document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.t==tab))}
+function R(){P=S.prog||DEF;ap();$('#v').innerHTML={w:vw,r:vr,p:vp,u:vu,t:vt}[tab]();document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.t==tab))}
 document.addEventListener('input',e=>{const t=e.target;if(t.dataset.f&&S.draft){S.draft.x[t.dataset.x][t.dataset.s][t.dataset.f]=t.value;sv()}});
-document.addEventListener('change',e=>{const t=e.target;if(t.dataset.r0){S.run0=Math.min(10,nu(t.value)||5);sv();R()}});
-document.addEventListener('click',e=>{ac();const n=e.target.closest('nav button');if(n){tab=n.dataset.t;R();scrollTo(0,0);return}
+document.addEventListener('change',e=>{const t=e.target;if(t.id=='gs'){$('#gx').innerHTML=t.value?hx(t.value):''}if(t.id=='bf'&&t.files[0])t.files[0].text().then(x=>{try{const o=JSON.parse(x);if(o&&o.block){S=Object.assign(S,o);sv();R()}}catch(e){}});if(t.dataset.r0){S.run0=Math.min(10,nu(t.value)||5);sv();R()}});
+document.addEventListener('click',e=>{ac();const n=e.target.closest('nav button');if(n){tab=n.dataset.t;if(tab=='u')ld();R();scrollTo(0,0);return}
 const t=e.target.closest('[data-a]');if(!t)return;const a=t.dataset.a,x=+t.dataset.x,s=+t.dataset.s;
 if(a=='ck'){const o=S.draft.x[x][s];o.d=o.d?0:1;t.classList.toggle('on',!!o.d);if(o.d)ts(P[S.draft.day][1][x][5]);sv()}
 else if(a=='tm')ts(+t.dataset.s);
 else if(a=='add'){T.e=Math.max(T.e,Date.now())+3e4;T.d=0;tk()}
 else if(a=='day'){S.draft=mk(t.dataset.d);sv();R()}
 else if(a=='gd'){const g=t.closest('.card').querySelector('.gd');g.hidden=!g.hidden;t.textContent=g.hidden?'Ohje':'Piilota';t.classList.toggle('on',!g.hidden)}
+else if(a=='mn'){const q=t.closest('.card').querySelector('.mn');q.hidden=!q.hidden}
+else if(a=='hs'){const q=t.closest('.card').querySelector('.hs');q.hidden=!q.hidden;if(!q.hidden)q.innerHTML=hx(t.dataset.n)}
+else if(a=='as'){const r=S.draft.x[x],l=r[r.length-1];r.push({k:l.k,r:l.r,d:0});sv();R()}
+else if(a=='rm'){const r=S.draft.x[x];if(r.length>1)r.pop();sv();R()}
+else if(a=='sw'){const d=S.draft;d.sw=d.sw||{};d.sw[x]=d.sw[x]?0:1;const w=gw(ev(P[d.day][1][x],x));d.x[x]=d.x[x].map(()=>({k:w?w.kg:'',r:w?w.r:'',d:0}));sv();R()}
+else if(a=='sk'){const d=S.draft;d.sk=d.sk||{};d.sk[x]=d.sk[x]?0:1;sv();R()}
+else if(a=='dh'){if(!t.dataset.c){t.dataset.c=1;t.textContent='Varmista';return}S.hist.splice(x,1);sv();R()}
+else if(a=='sh')sh();
+else if(a=='hi'){S.hi=1;sv();R()}
+else if(a=='ob'){OB.w=$('#ow').value;OB.h=$('#oh').value;OB.r=$('#or').value;OB.q=$('#oq').value;if($('#oa'))OB.ag=$('#oa').checked;const k=t.dataset.k,v=t.dataset.v;if(t.dataset.m){const j=OB[k].indexOf(v);j<0?OB[k].push(v):OB[k].splice(j,1)}else OB[k]=v;R()}
+else if(a=='ogo'){if(!S.ag&&!$('#oa').checked){const l=$('#oa').closest('label');l.style.outline='2px solid var(--a)';l.scrollIntoView({block:'center'});return}if(!S.ag)S.ag=td();const o={exp:OB.exp,days:+OB.days,eq:OB.eq,goal:OB.goal,foc:[...OB.foc],lim:[...OB.lim],w:nu($('#ow').value)||'',h:nu($('#oh').value)||'',q:$('#oq').value,sp:OB.sp,rd:OB.rd};S.run0=Math.min(10,nu($('#or').value)||S.run0);S.prof=o;S.prog=P=gen(o);S.draft=null;S.start=td();OB.open=0;tab='w';S.msg='<h3>Ohjelma päivitetty</h3><p class="m">Uusi 6 viikon jakso alkoi. Painot säilyvät liikkeen nimen mukaan.</p>';sv();R();scrollTo(0,0)}
+else if(a=='oskip'){S.skip=1;OB.open=0;sv();R()}
+else if(a=='ob0'){Object.assign(OB,S.prof?JSON.parse(JSON.stringify(S.prof)):{},{open:1,days:String(S.prof?S.prof.days:3),r:fm(S.run0)});tab='w';R();scrollTo(0,0)}
+else if(a=='ad'){const n=$('#an').value.trim(),k=$('#ad').value;if(!n)return;const l=LIB.find(x=>x.n.toLowerCase()==n.toLowerCase());P[k][1].push(l?[l.n+'|'+l.n,3,l.lo,l.hi,l.st,l.rs]:[n+'|'+n,3,8,12,2.5,90]);S.prog=P;if(S.draft&&S.draft.day==k)S.draft.x.push([0,0,0].map(()=>({k:'',r:'',d:0})));sv();R()}
+else if(a=='rx'){if(!t.dataset.c){t.dataset.c=1;t.textContent='Poista?';return}const k=t.dataset.k;if(!P[k][1].length)return;P[k][1].splice(x,1);S.prog=P;if(S.draft&&S.draft.day==k){S.draft.x.splice(x,1);S.draft.sw=S.draft.sk=null}sv();R()}
+else if(a=='ls'){S.lib=S.lib||[];S.lib.push({n:$('#ln').value.trim()||'Ohjelma '+(S.lib.length+1),prog:JSON.parse(JSON.stringify(P)),prof:S.prof||null});sv();R()}
+else if(a=='lu'){const l=S.lib[x];S.prog=P=JSON.parse(JSON.stringify(l.prog));if(l.prof)S.prof=JSON.parse(JSON.stringify(l.prof));S.draft=null;S.start=td();S.msg='<h3>Ohjelma otettu käyttöön</h3><p class="m">'+l.n+'. Uusi 6 viikon jakso alkoi.</p>';tab='w';sv();R();scrollTo(0,0)}
+else if(a=='lx'){if(!t.dataset.c){t.dataset.c=1;t.textContent='Varmista';return}S.lib.splice(x,1);sv();R()}
+else if(a=='eb'){if(!t.dataset.c){t.dataset.c=1;t.textContent='Varmista';return}const n=+t.dataset.n,r={};for(let i=0;i<n;i++)r['ABCDEF'[i]]=['Päivä '+'ABCDEF'[i],[]];S.prog=P=r;S.draft=null;S.start=td();sv();R();scrollTo(0,0)}
+else if(a=='th'){S.theme=t.dataset.v;sv();R()}
 else if(a=='fin')fin();
 else if(a=='drop'){S.draft=null;sv();R()}
 else if(a=='cm'){S.msg=null;sv();R()}
