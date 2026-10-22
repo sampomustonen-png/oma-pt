@@ -55,7 +55,8 @@ h2{font-size:30px;font-weight:800;letter-spacing:-.6px;margin-bottom:6px}
 input,select,textarea{border:0;background:rgba(120,120,128,.12)}
 .ck{border-radius:50%;width:44px;height:44px;justify-self:center}
 .btn{font-weight:600;border-radius:14px}.btn.g{background:rgba(120,120,128,.16);color:var(--a);border:0}
-nav button b{font-size:22px}.lv span{background:var(--c);border:1px solid var(--b);border-radius:8px;padding:3px 8px;font-weight:600}
+nav button b{font-size:22px}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center}.cal span{font-size:12px}.cd{display:flex;flex-direction:column;align-items:center;justify-content:center;aspect-ratio:1;border-radius:10px;font-weight:600;font-size:15px}.cd small{font-size:9px;font-weight:500;min-height:10px}.cd.g{background:var(--a);color:#fff}.cd.r{background:var(--ok);color:#fff}.cd.g.r{background:linear-gradient(135deg,var(--a) 50%,var(--ok) 50%)}.cd.t{outline:2px solid var(--t)}.lv span{background:var(--c);border:1px solid var(--b);border-radius:8px;padding:3px 8px;font-weight:600}
 </style></head><body>
 <header id="bar"><div id="tm">0:00</div><div class="cs">
 <button class="ch" data-a="tm" data-s="60">1:00</button><button class="ch" data-a="tm" data-s="90">1:30</button><button class="ch" data-a="tm" data-s="120">2:00</button><button class="ch" data-a="tm" data-s="180">3:00</button><button class="ch" data-a="add">+30 s</button><button class="ch" data-a="tm" data-s="0">Nollaa</button></div></header>
@@ -66,7 +67,7 @@ const $=s=>document.querySelector(s),K='omapt1';
 const td=()=>new Date(Date.now()-new Date().getTimezoneOffset()*6e4).toISOString().slice(0,10);
 let S=null;try{S=JSON.parse(localStorage.getItem(K))}catch(e){}
 S=Object.assign({block:1,start:td(),w:{},f:{},last:{},hist:[],runs:[],run0:5,draft:null,msg:null},S||{});
-const sv=()=>{try{localStorage.setItem(K,JSON.stringify(S))}catch(e){}};
+const sv=()=>{S.ts=Date.now();try{localStorage.setItem(K,JSON.stringify(S))}catch(e){}window.onSv&&window.onSv()};
 const fm=n=>String(Math.round(n*100)/100).replace('.',','),nu=v=>parseFloat(String(v).replace(',','.'))||0,r25=x=>Math.round(x/2.5)*2.5;
 const fd=d=>(+d.slice(8))+'.'+(+d.slice(5,7))+'.';
 const wk=()=>Math.floor((new Date(td())-new Date(S.start))/6048e5)+1;
@@ -217,7 +218,17 @@ const lc=(v,u)=>{if(!v.length)return'<p class="m">Ei vielä tietoja.</p>';const 
 function vg(){const ns=[...new Set(S.hist.flatMap(h=>Object.keys(h.x)))],wv={};S.hist.forEach(h=>{const d=new Date(h.d),k=h.d.slice(0,4)+'-'+Math.ceil(((d-new Date(d.getFullYear(),0,1))/864e5+1)/7);let v=0;for(const n in h.x)h.x[n].forEach(s=>v+=s.k*s.r);wv[k]=(wv[k]||0)+v});
 return`<div class="card"><h3>Edistyminen</h3>${ns.length?`<select id="gs"><option value="">Valitse liike</option>${ns.map(n=>`<option>${n}</option>`).join('')}</select><div id="gx" class="m" style="margin-top:8px">Valitse liike nähdäksesi kehityksen.</div>`:'<p class="m">Kaaviot ilmestyvät, kun olet tallentanut treenejä.</p>'}<h3 style="margin-top:14px">Viikoittainen kokonaiskuorma</h3>${lc(Object.values(wv).map(Math.round),'kg')}<h3 style="margin-top:14px">Juoksumatkat</h3>${lc(S.runs.map(r=>r.km),'km')}</div>`}
 function vl(){return`<div class="card"><h3>Ohjelmakirjasto</h3><input id="ln" placeholder="Ohjelman nimi"><button class="btn" data-a="ls">Tallenna nykyinen ohjelma</button>${(S.lib||[]).map((l,i)=>`<div class="row" style="grid-template-columns:1fr auto auto"><b>${l.n}</b><button class="ch" data-a="lu" data-x="${i}">Käytä</button><button class="ch" data-a="lx" data-x="${i}">Poista</button></div>`).join('')}</div><div class="card"><h3>Rakenna oma ohjelma</h3><p class="m">Luo tyhjä ohjelma ja lisää liikkeet itse Lisää liike -kortista. Tallenna nykyinen ohjelma kirjastoon ensin, sillä uusi ohjelma korvaa sen. Valitse treenipäivien määrä:</p><div class="cs" style="margin-top:8px">${[2,3,4,5,6].map(n=>`<button class="ch" data-a="eb" data-n="${n}">${n} päivää</button>`).join('')}</div></div>`}
-function vu(){return vo(1)+`<div class="card"><h3>Teema</h3><div class="cs" style="margin-top:8px">${[['a','Automaattinen'],['l','Vaalea'],['d','Tumma']].map(([v,l])=>`<button class="ch${(S.theme||'a')==v?' on':''}" data-a="th" data-v="${v}">${l}</button>`).join('')}</div><p class="m" style="margin-top:8px">Automaattinen seuraa puhelimen asetusta.</p></div>`}
+let CM=td().slice(0,7);
+function vc(){const[y,m]=CM.split('-').map(Number),f=(new Date(y,m-1,1).getDay()+6)%7,n=new Date(y,m,0).getDate(),g={},r={};S.hist.forEach(h=>{if(h.d.startsWith(CM)){const d=+h.d.slice(8);g[d]=(g[d]||'')+h.day}});S.runs.forEach(x=>{if(x.d.startsWith(CM))r[+x.d.slice(8)]=x.km});let c='';for(let i=0;i<f;i++)c+='<i></i>';for(let d=1;d<=n;d++)c+=`<b class="cd${g[d]?' g':''}${r[d]?' r':''}${CM+'-'+String(d).padStart(2,'0')==td()?' t':''}">${d}<small>${g[d]||(r[d]?fm(r[d])+' km':'')}</small></b>`;
+return`<div class="card"><h3>Kalenteri</h3><div style="display:flex;justify-content:space-between;align-items:center;margin:8px 0"><button class="ch" data-a="cn" data-v="-1">‹</button><b>${['tammikuu','helmikuu','maaliskuu','huhtikuu','toukokuu','kesäkuu','heinäkuu','elokuu','syyskuu','lokakuu','marraskuu','joulukuu'][m-1]} ${y}</b><button class="ch" data-a="cn" data-v="1">›</button></div><div class="cal">${['Ma','Ti','Ke','To','Pe','La','Su'].map(x=>`<span class="m">${x}</span>`).join('')}${c}</div><p class="m" style="margin-top:8px">Tässä kuussa: ${Object.keys(g).length} salipäivää ja ${Object.keys(r).length} juoksupäivää. Sininen = sali, vihreä = juoksu.</p></div>`}
+const vk=()=>{const c=window.CL;return`<div class="card"><h3>Pilvitallennus</h3>${!c?'<p class="m">Pilvitallennus ei ole käytössä tässä versiossa. Se vaatii GitHub-version ja omat Firebase-asetukset.</p>':c.st=='in'?`<p class="m">Kirjautuneena: ${c.email}. Tiedot tallentuvat pilveen automaattisesti.</p><button class="btn g" data-a="co">Kirjaudu ulos</button>`:'<p class="m">Kirjaudu, jos haluat tallentaa tulokset pilveen.</p><button class="btn" data-a="ci">Kirjaudu Googlella</button>'}</div>`};
+function adj(){const ch=[],g={},sm=S.hist.filter(h=>h.d>=S.start),b=S.block+1,gr=n=>{const x=LIB.find(y=>y.n==n);return x?x.g:null};let hv=0;
+for(const k in P)P[k][1].forEach(e=>{const x=gr(nm(e)[0]);if(x)g[x]=(g[x]||0)+e[1]});
+for(const k in P)P[k][1].forEach(e=>{const n=nm(e)[0],x=gr(n),L=LIB.find(y=>y.n==n),t=sm.filter(h=>h.x[n]).map(h=>Math.max(...h.x[n].map(s=>s.k))),up=t.length>1&&t[t.length-1]>t[0];
+if(x&&t.length>1&&e[1]<5&&g[x]<(up?16:10)){e[1]++;g[x]++;ch.push(n+': +1 sarja')}
+if(L&&L.k=='m'&&(!S.prof||S.prof.goal=='b')){hv=1;if(b%2){e[2]=L.lo;e[3]=L.hi;e[5]=L.rs}else{e[2]=Math.max(3,L.lo-2);e[3]=Math.max(L.lo+1,L.hi-3);e[5]=Math.max(L.rs,180)}}});
+if(hv)ch.push(b%2?'Raskaiden liikkeiden toistoalue palasi lihaskasvuvoittoiseksi.':'Raskaissa liikkeissä siirryttiin painavampaan toistoalueeseen voiman rakentamiseksi.');S.prog=P;return ch.slice(0,9)}
+function vu(){return vc()+vo(1)+vk()+`<div class="card"><h3>Teema</h3><div class="cs" style="margin-top:8px">${[['a','Automaattinen'],['l','Vaalea'],['d','Tumma']].map(([v,l])=>`<button class="ch${(S.theme||'a')==v?' on':''}" data-a="th" data-v="${v}">${l}</button>`).join('')}</div><p class="m" style="margin-top:8px">Automaattinen seuraa puhelimen asetusta.</p></div>`}
 function vx(){return`<div class="card"><h3>Lisää liike ohjelmaan</h3><p class="m">Valitse liike kirjastosta tai kirjoita oma liike.</p><input id="an" list="lib" placeholder="Liikkeen nimi" autocomplete="off"><select id="ad" style="margin-top:8px">${Object.keys(P).map(k=>`<option value="${k}">${P[k][0]}</option>`).join('')}</select><button class="btn" data-a="ad">Lisää</button><datalist id="lib">${LIB.map(x=>`<option value="${x.n}">`).join('')}</datalist></div><details class="card"><summary>Liikekirjasto (${LIB.length} liikettä)</summary>${Object.keys(GN).map(g=>`<p style="margin:10px 0 2px"><b>${GN[g]}</b></p><div class="m">${LIB.filter(x=>x.g==g).map(x=>x.n).join(', ')}</div>`).join('')}</details>`}
 const ev=(e,i)=>S.draft&&S.draft.sw&&S.draft.sw[i]?[e[0].split('|').reverse().join('|'),...e.slice(1)]:e;
 const e1=s=>s.k*(1+s.r/30),pb=(n,ss)=>{const p=Math.max(0,...S.hist.filter(h=>h.x[n]).flatMap(h=>h.x[n].map(e1)));return p>0&&Math.max(...ss.map(e1))>p};
@@ -329,11 +340,14 @@ else if(a=='ls'){S.lib=S.lib||[];S.lib.push({n:$('#ln').value.trim()||'Ohjelma '
 else if(a=='lu'){const l=S.lib[x];S.prog=P=JSON.parse(JSON.stringify(l.prog));if(l.prof)S.prof=JSON.parse(JSON.stringify(l.prof));S.draft=null;S.start=td();S.msg='<h3>Ohjelma otettu käyttöön</h3><p class="m">'+l.n+'. Uusi 6 viikon jakso alkoi.</p>';tab='w';sv();R();scrollTo(0,0)}
 else if(a=='lx'){if(!t.dataset.c){t.dataset.c=1;t.textContent='Varmista';return}S.lib.splice(x,1);sv();R()}
 else if(a=='eb'){if(!t.dataset.c){t.dataset.c=1;t.textContent='Varmista';return}const n=+t.dataset.n,r={};for(let i=0;i<n;i++)r['ABCDEF'[i]]=['Päivä '+'ABCDEF'[i],[]];S.prog=P=r;S.draft=null;S.start=td();sv();R();scrollTo(0,0)}
+else if(a=='cn'){const d=new Date(+CM.slice(0,4),+CM.slice(5)-1+(+t.dataset.v),1);CM=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');R()}
+else if(a=='ci'){window.cloudIn&&window.cloudIn()}
+else if(a=='co'){window.cloudOut&&window.cloudOut()}
 else if(a=='th'){S.theme=t.dataset.v;sv();R()}
 else if(a=='fin')fin();
 else if(a=='drop'){S.draft=null;sv();R()}
 else if(a=='cm'){S.msg=null;sv();R()}
-else if(a=='nb'){S.block++;S.start=td();S.draft=null;S.msg='<h3>Uusi jakso alkoi</h3><p class="m">Osa liikkeistä vaihtui variaatioihin ja aloituspainot laskettiin edellisistä tuloksistasi.</p>';sv();tab='w';R();scrollTo(0,0)}
+else if(a=='nb'){const ch=adj();S.block++;S.start=td();S.draft=null;S.msg='<h3>Uusi jakso alkoi</h3><p class="m">Osa liikkeistä vaihtui variaatioihin ja aloituspainot laskettiin edellisistä tuloksistasi.</p>'+(ch.length?'<p class="m">Tulostesi perusteella tehdyt muutokset:</p><ul>'+ch.map(x=>'<li>'+x+'</li>').join('')+'</ul>':'');sv();tab='w';R();scrollTo(0,0)}
 else if(a=='run'){const km=nu($('#rk').value),min=nu($('#rm').value);if(km>0&&min>0){S.runs.push({d:td(),km,min,rpe:+$('#rr').value});sv();R()}else{$('#rm').focus()}}
 else if(a=='cp'){const j=JSON.stringify(S);$('#bk').value=j;try{navigator.clipboard.writeText(j)}catch(e){}$('#bk').select()}
 else if(a=='rs'){try{const o=JSON.parse($('#bk').value);if(o&&o.block){S=Object.assign(S,o);sv();R()}}catch(e){$('#bk').placeholder='Varmuuskopio ei kelpaa. Liitä koko teksti uudelleen.'}}
@@ -344,4 +358,18 @@ let WL=null;async function wl(){try{if('wakeLock' in navigator&&document.visibil
 document.addEventListener('visibilitychange',wl);document.addEventListener('click',wl);wl();
 // offline-tuki
 if('serviceWorker' in navigator&&location.protocol.startsWith('http'))addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
+// pilvisynkronointi (valinnainen, vaatii firebase-config.js-asetukset)
+(async()=>{try{
+const{firebaseConfig:fc}=await import('./firebase-config.js');if(!fc||!fc.apiKey||fc.apiKey.startsWith('LIITÄ'))return;
+const B='https://www.gstatic.com/firebasejs/10.14.1/',A=await import(B+'firebase-app.js'),U=await import(B+'firebase-auth.js'),F=await import(B+'firebase-firestore.js');
+const app=A.initializeApp(fc),au=U.getAuth(app),db=F.getFirestore(app);window.CL={st:'out'};let ref=null,tm=0;
+const cnt=o=>(o.hist||[]).length+(o.runs||[]).length;
+window.cloudIn=async()=>{const p=new U.GoogleAuthProvider();try{await U.signInWithPopup(au,p)}catch(e){try{await U.signInWithRedirect(au,p)}catch(x){}}};
+window.cloudOut=()=>U.signOut(au);
+window.onSv=()=>{if(!ref)return;clearTimeout(tm);tm=setTimeout(()=>F.setDoc(ref,{d:JSON.stringify(S),ts:Date.now()}).catch(()=>{}),2000)};
+U.onAuthStateChanged(au,async u=>{if(!u){ref=null;window.CL={st:'out'};R();return}
+ref=F.doc(db,'users',u.uid);window.CL={st:'in',email:u.email};
+try{const s=await F.getDoc(ref);if(s.exists()){const c=JSON.parse(s.data().d);if(cnt(c)>cnt(S)||(cnt(c)==cnt(S)&&(c.ts||0)>(S.ts||0))){try{localStorage.setItem(K+'-local',JSON.stringify(S))}catch(e){}S=c;sv()}else window.onSv()}else window.onSv()}catch(e){}
+R()})
+}catch(e){}})();
 </script></body></html>

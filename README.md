@@ -27,3 +27,9 @@ Jos tiedot katoavat, palauta ne: Ohjelma → Palauta tiedostosta.
 - `manifest.webmanifest`: Koti-valikon asetukset
 - `sw.js`: offline-tuki (vaihda ensimmäisellä rivillä oleva versionumero aina päivityksessä)
 - `icon-192.png`, `icon-512.png`, `apple-touch-icon.png`: kuvakkeet
+
+## Pilvitallennus (valinnainen, vain omille tiedoille)
+Katso Firebase-projektin luonti ja turvasäännöt keskustelun ohjeista. Kun projekti on valmis:
+1. Avaa `firebase-config.js` ja korvaa arvot Firebase-konsolin web-sovelluksen asetuksilla (apiKey, authDomain, projectId, appId).
+2. Lataa tiedosto GitHubiin ja päivitä sivu. Profiili-välilehdelle ilmestyy Kirjaudu Googlella -painike.
+3. Jos `firebase-config.js`:n arvoja ei vaihdeta, sovellus toimii normaalisti ilman pilvitallennusta.
