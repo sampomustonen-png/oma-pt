@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Oma PT">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#1c1c1e" media="(prefers-color-scheme: dark)">
 <style>
@@ -56,12 +56,42 @@ input,select,textarea{border:0;background:rgba(120,120,128,.12)}
 .ck{border-radius:50%;width:44px;height:44px;justify-self:center}
 .btn{font-weight:600;border-radius:14px}.btn.g{background:rgba(120,120,128,.16);color:var(--a);border:0}
 nav button b{font-size:22px}
-.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center}.cal span{font-size:12px}.cd{display:flex;flex-direction:column;align-items:center;justify-content:center;aspect-ratio:1;border-radius:10px;font-weight:600;font-size:15px}.cd small{font-size:9px;font-weight:500;min-height:10px}.cd.g{background:var(--a);color:#fff}.cd.r{background:var(--ok);color:#fff}.cd.g.r{background:linear-gradient(135deg,var(--a) 50%,var(--ok) 50%)}.cd.t{outline:2px solid var(--t)}.lv span{background:var(--c);border:1px solid var(--b);border-radius:8px;padding:3px 8px;font-weight:600}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center}.cal span{font-size:12px}.cd{display:flex;flex-direction:column;align-items:center;justify-content:center;aspect-ratio:1;border-radius:10px;font-weight:600;font-size:15px}.cd small{font-size:9px;font-weight:500;min-height:10px}.cd.g{background:var(--a);color:#fff}.cd.r{background:var(--ok);color:#fff}.cd.g.r{background:linear-gradient(135deg,var(--a) 50%,var(--ok) 50%)}.cd.t{outline:2px solid var(--t)}
+
+/* premium */
+:root{--sh:0 1px 2px rgba(0,0,0,.04),0 8px 24px rgba(0,0,0,.06)}
+:root[data-theme="dark"]{--sh:none}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--sh:none}}
+body{-webkit-font-smoothing:antialiased;letter-spacing:-.1px}
+main{padding:16px 16px 120px}
+.card{border-radius:18px;padding:18px;margin-bottom:14px;box-shadow:var(--sh)}
+:root[data-theme="dark"] .card{border:.5px solid rgba(255,255,255,.06)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]) .card{border:.5px solid rgba(255,255,255,.06)}}
+h2{font-size:28px;font-weight:700;letter-spacing:-.5px;margin-bottom:2px}
+h3{font-size:17px;font-weight:700}
+.m{line-height:1.45}
+#tm{font-weight:700;font-size:34px;letter-spacing:-1px;font-variant-numeric:tabular-nums}
+.ch{padding:8px 14px;font-size:14px;transition:background .15s,transform .1s}
+.ch:active,.btn:active{transform:scale(.97)}
+.btn{padding:15px;font-size:17px;border-radius:14px;box-shadow:0 4px 14px color-mix(in srgb,var(--a) 30%,transparent);transition:transform .1s}
+.btn.g{box-shadow:none}
+.ck{transition:background .15s,border-color .15s}
+.lv{border-radius:12px}
+nav{background:color-mix(in srgb,var(--c) 94%,transparent);padding:6px 8px calc(env(safe-area-inset-bottom,0px) + 2px);border-top:.5px solid var(--b)}
+nav button{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0 4px;font-size:10.5px;font-weight:500;color:var(--m);letter-spacing:.1px;transition:color .15s}
+nav button svg{transition:transform .2s}
+nav .on{color:var(--a);font-weight:600}
+nav .on svg{stroke-width:2.2;transform:translateY(-1px)}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+*,*::before,*::after,button,input,select,textarea{font-family:Arial,Helvetica,sans-serif!important}
+body::before{background:#1c1c1e}
+#bar{background:#1c1c1e;color:#fff;border-color:#38383a}
+#bar .ch{background:rgba(255,255,255,.16);color:#fff}.lv span{background:var(--c);border:1px solid var(--b);border-radius:8px;padding:3px 8px;font-weight:600}
 </style></head><body>
 <header id="bar"><div id="tm">0:00</div><div class="cs">
 <button class="ch" data-a="tm" data-s="60">1:00</button><button class="ch" data-a="tm" data-s="90">1:30</button><button class="ch" data-a="tm" data-s="120">2:00</button><button class="ch" data-a="tm" data-s="180">3:00</button><button class="ch" data-a="add">+30 s</button><button class="ch" data-a="tm" data-s="0">Nollaa</button></div></header>
 <main id="v"></main>
-<nav><button data-t="w"><b>🏋️</b>Treeni</button><button data-t="r"><b>🏃</b>Juoksu</button><button data-t="p"><b>📅</b>Ohjelma</button><button data-t="u"><b>👤</b>Profiili</button><button data-t="t"><b>💡</b>Vinkit</button></nav>
+<nav><button data-t="w"><svg viewBox="0 0 24 24" width="25" height="25" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.5 6.5v11M17.5 6.5v11M3.5 9v6M20.5 9v6M6.5 12h11"/></svg><span>Treeni</span></button><button data-t="r"><svg viewBox="0 0 24 24" width="25" height="25" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="13.5" cy="4.5" r="1.8"/><path d="M8 21l3-6 3 2v5M6 12l3-3.5 4 1.5 2 3 3 .5M11 15l-1.5-4"/></svg><span>Juoksu</span></button><button data-t="p"><svg viewBox="0 0 24 24" width="25" height="25" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg><span>Ohjelma</span></button><button data-t="u"><svg viewBox="0 0 24 24" width="25" height="25" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8.5" r="4"/><path d="M4.5 20.5c1.2-3.6 4-5.5 7.5-5.5s6.3 1.9 7.5 5.5"/></svg><span>Profiili</span></button><button data-t="t"><svg viewBox="0 0 24 24" width="25" height="25" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.6 10.8c.7.6 1.1 1.3 1.1 2.2h5c0-.9.4-1.6 1.1-2.2A6 6 0 0 0 12 3z"/></svg><span>Vinkit</span></button></nav>
 <script>
 const $=s=>document.querySelector(s),K='omapt1';
 const td=()=>new Date(Date.now()-new Date().getTimezoneOffset()*6e4).toISOString().slice(0,10);
