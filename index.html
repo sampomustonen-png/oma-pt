@@ -311,16 +311,25 @@ if(!Object.keys(lg.x).length){S.msg='<h3>Ei tallennettavaa</h3><p class="m">Merk
 S.hist.push(lg);S.draft=null;
 S.msg='<h3>Treeni tallennettu</h3>'+(pr.length?'<p>🏆 Uusi ennätys: <b>'+pr.join(', ')+'</b></p>':'')+(dl?'<p class="m">Kevennysviikolla painoja ei muuteta.</p>':'<p class="m">Seuraavalla kerralla:</p><ul>'+o.join('')+'</ul>');
 sv();R();scrollTo(0,0)}
-const rp=b=>{const s=Math.min(S.run0+(b-1)*1.5,8);return[0,.5,1,1.5,2,0].map(x=>Math.min(10,s+x))};
+const r5=x=>Math.max(2,Math.min(10,Math.round(x*2)/2)),wo=d=>Math.floor((new Date(d)-new Date(S.start))/6048e5)+1;
+const ra=r=>r.rpe<=6?r.km+Math.min(1,r.km*.1):r.rpe<=8?r.km:r.km*.9;
+function rb(){const R=S.runs.slice(-3);if(!R.length)return null;const l=R[R.length-1];return l.rpe>=9?ra(l):Math.max(...R.map(ra))}
+function rp(){const w=Math.min(wk(),6),b=rb(),o=[0,.5,1,1.5,2,0].map(x=>Math.min(10,Math.min(S.run0+(S.block-1)*1.5,8)+x)),p=[],d=[];
+for(let i=1;i<=6;i++){const m=S.runs.filter(r=>r.d>=S.start&&wo(r.d)==i).map(r=>r.km);d.push(i<w&&m.length?Math.max(...m):null)}
+let t=b==null?o[w-1]:b;for(let i=w;i<=6;i++){if(i==6){p[5]=r5((i==w?t:p[4])*.75);break}if(i>w)t=t+Math.min(1,t*.1);p[i-1]=r5(t)}
+for(let i=0;i<w-1;i++)p[i]=d[i]!=null?d[i]:o[i];return{p,d}}
+const mm=x=>{const s=Math.round(x*60);return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')};
+function rv(){const R=S.runs.filter(r=>r.min>0&&r.km>=2).slice(-5);if(!R.length)return null;const f={10:1,9:.97,8:.94,7:.91};
+const p10=Math.min(...R.map(r=>r.min/r.km*(f[r.rpe]||.88)*Math.pow(10/r.km,.06)));return{e1:p10*1.2,e2:p10*1.3,q:p10*1.06,t10:p10*10}}
 const pace=(k,m)=>{const p=m/k;return Math.floor(p)+':'+String(Math.round(p%1*60)%60).padStart(2,'0')+' /km'};
-function rt(){const p=rp(S.block),w=Math.min(wk(),6),l=S.runs[S.runs.length-1];let t=p[w-1];if(l&&l.rpe>=9&&w<6)t=Math.min(t,l.km);return t}
-function vr(){if(S.prof&&+S.prof.rd===0)return'<div class="card"><h2>Juoksu</h2><p class="m">Juoksu ei kuulu nykyiseen ohjelmaasi. Voit lisätä juoksupäiviä Profiili-välilehdellä.</p></div>';const p=rp(S.block),w=Math.min(wk(),6),t=rt();
-let h=`<div class="card"><h2>Juoksu viikolla ${w}/6</h2><div class="big">${fm(t)} km</div><p class="m">${w==6?'Kevennysviikko: rauhallinen, lyhyempi lenkki.':'Rauhallinen vauhti, jolla pystyt vielä puhumaan.'}${w>=4&&w<6&&S.block>1?' Voit juosta lenkin viimeiset 2 km hieman reippaammin.':''}${t>=10?' Olet saavuttanut 10 km. Jatkossa tavoite on parantaa vauhtia.':''}</p>
-<div class="wk">${p.map((x,i)=>`<i class="${i<w-1?'d':i==w-1?'p':''}"></i>`).join('')}</div><div class="m">Jakson matkat (km): ${p.map(fm).join(', ')}</div>${S.prof&&+S.prof.rd>1?'<p class="m">Viikossa on '+S.prof.rd+' juoksua: tee yllä oleva matka pisimmällä lenkillä ja muut noin 60 % pituudesta.</p>':''}</div>
+function rt(){return rp().p[Math.min(wk(),6)-1]}
+function vr(){if(S.prof&&+S.prof.rd===0)return'<div class="card"><h2>Juoksu</h2><p class="m">Juoksu ei kuulu nykyiseen ohjelmaasi. Voit lisätä juoksupäiviä Profiili-välilehdellä.</p></div>';const{p,d}=rp(),w=Math.min(wk(),6),t=rt(),v=rv(),qk=(w>=4&&w<6)||t>=10;
+let h=`<div class="card"><h2>Seuraava juoksu</h2><div class="m">Viikko ${w}/6</div><div class="big">${fm(t)} km</div><p class="m">${w==6?'Kevennysviikko: rauhallinen, lyhyempi lenkki.':'Rauhallinen vauhti, jolla pystyt vielä puhumaan.'}${qk&&w<6?' Juokse viimeiset 2 km reippaammin.':''}${t>=10?' Olet saavuttanut 10 km. Jatkossa tavoite on parantaa vauhtia.':''}</p>${v?`<div class="lv"><b>Tavoitevauhti</b><div><span>Rauhallinen ${mm(v.e1)}–${mm(v.e2)} /km</span>${qk&&w<6?`<span>Reipas osuus ${mm(v.q)} /km</span>`:''}</div><div class="m" style="display:block;margin-top:6px">Arvioitu 10 km kunto: noin ${Math.round(v.t10)} min. Arvio perustuu viimeisiin juoksuihisi ja tarkentuu, kun kirjaat lisää.</div></div>`:'<p class="m">Kirjaa juoksu ajan kanssa, niin sovellus ehdottaa tavoitevauhdin.</p>'}
+<div class="wk">${p.map((x,i)=>`<i class="${i<w-1?'d':i==w-1?'p':''}"></i>`).join('')}</div><div class="m">Jakson matkat (km): ${p.map((x,i)=>i<w-1?(d[i]!=null?fm(x)+' ✓':'–'):fm(x)).join(', ')}</div>${S.prof&&+S.prof.rd>1?'<p class="m">Viikossa on '+S.prof.rd+' juoksua: tee yllä oleva matka pisimmällä lenkillä ja muut noin 60 % pituudesta.</p>':''}</div>
 <div class="card"><h3>Kirjaa juoksu</h3><div class="row" style="grid-template-columns:1fr 1fr"><label class="m">Matka (km)<input id="rk" inputmode="decimal" value="${fm(t)}"></label><label class="m">Aika (min)<input id="rm" inputmode="decimal"></label></div>
 <label class="m" style="display:block;margin-top:8px">Rasittavuus (1 = hyvin kevyt, 10 = maksimi)<select id="rr">${[1,2,3,4,5,6,7,8,9,10].map(x=>`<option${x==6?' selected':''}>${x}</option>`).join('')}</select></label><button class="btn" data-a="run">Tallenna juoksu</button>
-<p class="m">Jos rasittavuus on 9 tai 10, seuraavalla viikolla matka pysyy samana.</p></div>
-<div class="card"><h3>Lähtötaso</h3><label class="m">Nykyinen helppo lenkkisi (km). Jaksojen matkat lasketaan tästä.<input data-r0="1" inputmode="decimal" value="${fm(S.run0)}"></label></div>`;
+<p class="m">Seuraava matka lasketaan kolmen viimeisen juoksun matkasta ja rasittavuudesta. Rasittavuus 1–6: matka kasvaa enintään 10 %. 7–8: matka pysyy. 9–10: matka lyhenee noin 10 %. Matka on enintään 10 km, minkä jälkeen kehitys tulee vauhdista.</p></div>
+<div class="card"><h3>Lähtötaso</h3><label class="m">Nykyinen helppo lenkkisi (km). Käytetään, kunnes olet kirjannut ensimmäisen juoksun.<input data-r0="1" inputmode="decimal" value="${fm(S.run0)}"></label></div>`;
 if(S.runs.length)h+=`<div class="card"><h3>Edelliset juoksut</h3><ul>${S.runs.slice(-6).reverse().map(r=>`<li>${fd(r.d)}: ${fm(r.km)} km, ${fm(r.min)} min, ${pace(r.km,r.min)}, rasitus ${r.rpe}/10</li>`).join('')}</ul></div>`;
 return h}
 function vp(){const w=wk();let h=`<div class="card"><h2>Jakson rakenne</h2><p>Yksi jakso kestää <b>6 viikkoa</b>: viikot 1–5 kuorma kasvaa ja viikko 6 on kevennysviikko, jolloin sarjoja on vähemmän ja painot kevyempiä. Sen jälkeen sovellus luo uuden jakson: osa liikkeistä vaihtuu variaatioihin, aloituspainot lasketaan tuloksistasi ja juoksumatka kasvaa. Näin eteneminen jatkaa loputtomiin.</p>
