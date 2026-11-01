@@ -2,34 +2,38 @@
 
 Henkilökohtainen treeniohjelma sali- ja juoksuharjoitteluun. Toimii puhelimessa myös ilman verkkoyhteyttä.
 
-## Julkaisu GitHub Pagesissa (ensimmäinen kerta)
-1. Pura tämä zip-tiedosto.
-2. Luo github.com:ssa julkinen repository, esimerkiksi `oma-pt`.
-3. Valitse Add file → Upload files, vedä kaikki puretut tiedostot (ei kansiota) juureen ja paina Commit changes.
-4. Settings → Pages → Deploy from a branch → `main` ja `/ (root)` → Save.
-5. Sovelluksen osoite: `https://KÄYTTÄJÄNIMI.github.io/oma-pt/`
-6. iPhonella: avaa osoite Safarissa → Jaa → Lisää Koti-valikkoon. Käytä sovellusta sen jälkeen aina Koti-valikon kuvakkeesta.
+## Tiedostot
+- `index.html`: sivun runko
+- `styles.css`: ulkoasu
+- `data.js`: liikkeet, ohjeet ja oletusohjelma (versionumero on tämän tiedoston alussa)
+- `app.js`: sovelluksen toiminta
+- `cloud.js`: valinnainen pilvisynkronointi
+- `firebase-config.js`: omat Firebase-asetuksesi (älä korvaa omaa tiedostoasi tällä mallilla)
+- `sw.js`: offline-tuki
+- `manifest.webmanifest` ja `.png`-kuvakkeet: Koti-valikon asetukset
+- `tests/`: automaattiset testit kehitystä varten (ei tarvita GitHubissa)
 
-## Uuden version päivitys ilman tulosten menetystä
-Treenitulokset ovat puhelimen muistissa, ja ne säilyvät, kun päivität tiedostot samaan osoitteeseen.
-1. Ota varmuuskopio: sovelluksessa Ohjelma → Jaa varmuuskopio tiedostona → Tallenna Tiedostoihin.
-2. Avaa repository GitHubissa: Add file → Upload files. Vedä uudet tiedostot (`index.html`, `sw.js`, `manifest.webmanifest`, kuvakkeet). Tiedostojen nimien pitää olla samat kuin ennen, jolloin uusi tiedosto korvaa vanhan. Paina Commit changes.
-3. Odota 1–2 minuuttia. Sulje sovellus puhelimessa kokonaan (pyyhkäise ylös sovellusvalitsimessa) ja avaa se uudelleen. Tee tämä tarvittaessa kahdesti.
-4. Tarkista Ohjelma-välilehdeltä, että treenihistoria näkyy.
+## Päivitys GitHubiin ilman tulosten menetystä
+Treenitulokset ovat puhelimen muistissa (ja pilvessä, jos olet kirjautunut). Ne säilyvät, kun päivität tiedostot samaan osoitteeseen.
+1. Ota varmuuskopio: Asetukset → Jaa varmuuskopio tiedostona → Tallenna Tiedostoihin.
+2. Avaa repository GitHubissa: Add file → Upload files.
+3. Lataa kaikki tiedostot paitsi `firebase-config.js` ja `tests`-kansio. Tiedostot menevät repositorion juureen, ei kansioon.
+4. Paina Commit changes ja odota 2 minuuttia.
+5. Sulje sovellus puhelimessa kokonaan ja avaa se uudelleen. Tarkista Asetukset-välilehden alareunasta versionumero.
+
+Jatkossa sovellus hakee aina uusimman version verkosta, joten `sw.js`-tiedostoon ei tarvitse tehdä muutoksia päivityksissä.
 
 Älä tee näitä, ne tyhjentävät tiedot:
-- älä poista Koti-valikon kuvaketta äläkä poista tai nimeä uudelleen repositoriota, koska osoite muuttuu
+- älä poista Koti-valikon kuvaketta
+- älä poista tai nimeä uudelleen repositoriota, koska osoite muuttuu
 - älä tyhjennä Safarin tietoja
-Jos tiedot katoavat, palauta ne: Ohjelma → Palauta tiedostosta.
 
-## Tiedostot
-- `index.html`: koko sovellus
-- `manifest.webmanifest`: Koti-valikon asetukset
-- `sw.js`: offline-tuki (vaihda ensimmäisellä rivillä oleva versionumero aina päivityksessä)
-- `icon-192.png`, `icon-512.png`, `apple-touch-icon.png`: kuvakkeet
+Jos tiedot katoavat, palauta ne: Asetukset → Palauta tiedostosta.
 
-## Pilvitallennus (valinnainen, vain omille tiedoille)
-Katso Firebase-projektin luonti ja turvasäännöt keskustelun ohjeista. Kun projekti on valmis:
-1. Avaa `firebase-config.js` ja korvaa arvot Firebase-konsolin web-sovelluksen asetuksilla (apiKey, authDomain, projectId, appId).
-2. Lataa tiedosto GitHubiin ja päivitä sivu. Profiili-välilehdelle ilmestyy Kirjaudu Googlella -painike.
-3. Jos `firebase-config.js`:n arvoja ei vaihdeta, sovellus toimii normaalisti ilman pilvitallennusta.
+## Testit
+Testit ajetaan tietokoneella, jossa on Node.js ja Playwright:
+```
+npm install playwright
+npx playwright install chromium
+node tests/app.test.js
+```
