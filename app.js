@@ -292,8 +292,8 @@ function vp(){const w=wk();let h=`<div class="card"><h2>Jakso ${S.block}</h2><p>
 
 // ---------- näkymä: asetukset ----------
 function vs(){let h=UI.pe?vo(true):`<div class="card"><h2>Profiili</h2><p class="m">${pf()}</p><button class="btn g" data-a="pe">Muokkaa profiilia</button></div>`;
-  h+=`<div class="card"><h3>Tauon äänimerkki</h3><div class="cs" style="margin-top:8px">${[[1,'Päällä'],[0,'Pois']].map(([v,l])=>`<button class="ch${(S.snd===0?0:1)==v?' on':''}" data-a="snd" data-v="${v}">${l}</button>`).join('')}</div><p class="m">${S.snd===0?'Tauon loppu näkyy ajastinpalkin sinisenä värinä. Sovellus ei käytä ääntä lainkaan, joten musiikki ja äänikirjat soivat varmasti normaalisti.':'Merkkiääni soi tauon lopussa sekoittuen musiikkiin. Ääni ei kuulu äänettömällä tilalla tai lukitulla näytöllä. Jos musiikki tai äänikirja silti katkeaa, valitse Pois.'}</p></div>`;
-  h+=`<div class="card"><h3>Teema</h3><div class="cs" style="margin-top:8px">${[['a','Automaattinen'],['l','Vaalea'],['d','Tumma']].map(([v,l])=>`<button class="ch${(S.theme||'a')==v?' on':''}" data-a="th" data-v="${v}">${l}</button>`).join('')}</div><p class="m">Automaattinen seuraa puhelimen asetusta.</p></div>`;
+  h+=`<div class="card"><h3>Tauon äänimerkki</h3><div class="cs" style="margin-top:2px">${[[1,'Päällä'],[0,'Pois']].map(([v,l])=>`<button class="ch${(S.snd===0?0:1)==v?' on':''}" data-a="snd" data-v="${v}">${l}</button>`).join('')}</div><p class="m">${S.snd===0?'Tauon loppu näkyy ajastinpalkin sinisenä värinä. Sovellus ei käytä ääntä lainkaan, joten musiikki ja äänikirjat soivat varmasti normaalisti.':'Merkkiääni soi tauon lopussa sekoittuen musiikkiin. Ääni ei kuulu äänettömällä tilalla tai lukitulla näytöllä. Jos musiikki tai äänikirja silti katkeaa, valitse Pois.'}</p></div>`;
+  h+=`<div class="card"><h3>Teema</h3><div class="cs" style="margin-top:2px">${[['a','Automaattinen'],['l','Vaalea'],['d','Tumma']].map(([v,l])=>`<button class="ch${(S.theme||'a')==v?' on':''}" data-a="th" data-v="${v}">${l}</button>`).join('')}</div><p class="m">Automaattinen seuraa puhelimen asetusta.</p></div>`;
   h+=`<div class="card"><h3>Pilvitallennus</h3>${!CL?'<p class="m">Pilvitallennus ei ole käytössä tässä versiossa. Se vaatii GitHub-version ja omat Firebase-asetukset.</p>':CL.st=='in'?`<p class="m">Kirjautuneena: ${esc(CL.email)}. Tiedot tallentuvat pilveen automaattisesti, ja eri laitteiden treenit yhdistetään.</p><button class="btn g" data-a="co">Kirjaudu ulos</button>`:'<p class="m">Kirjaudu, jos haluat tallentaa tulokset pilveen.</p><button class="btn" data-a="ci">Kirjaudu Googlella</button>'}</div>`;
   h+=`<div class="card"><h3>Varmuuskopio</h3><p class="m">Tiedot tallentuvat tämän laitteen selaimeen. Tallenna varmuuskopio esimerkiksi Tiedostoihin ja palauta se tarvittaessa. Palautus korvaa nykyiset tiedot.</p><button class="btn" data-a="sh">Jaa varmuuskopio tiedostona</button><label class="btn g">Palauta tiedostosta<input id="bf" type="file" accept=".json,application/json" hidden></label><details style="margin-top:10px"><summary class="m">Varmuuskopio tekstinä</summary><textarea id="bk" rows="3" placeholder="Liitä varmuuskopio tähän" style="margin-top:8px"></textarea><button class="btn g" data-a="cp">Kopioi varmuuskopio tekstinä</button><button class="btn g" data-a="rs">Palauta liitetystä tekstistä</button></details></div>`;
   h+=`<div class="card"><h3>Vie tulokset</h3><p class="m">Kaikki sarjat ja juoksut taulukkona (CSV), jonka voi avata esimerkiksi Numbersissa tai Excelissä.</p><button class="btn g" data-a="csv">Vie taulukkona</button></div><p class="m ver">Oma PT, versio ${VERSION}</p>`;
@@ -321,7 +321,8 @@ window.APP={get:()=>S,merge:mergeState,set:m=>{S=Object.assign(base(),m);migrate
 
 // ---------- piirto ----------
 const ap=()=>{const r=document.documentElement;if(S.theme=='l')r.dataset.theme='light';else if(S.theme=='d')r.dataset.theme='dark';else r.removeAttribute('data-theme')};
-function R(){P=S.prog||DEF;ap();$('#v').innerHTML={w:vw,r:vr,g:vg,p:vp,s:vs}[tab]();document.querySelectorAll('nav button').forEach(b=>{const on=b.dataset.t==tab;b.classList.toggle('on',on);b.setAttribute('aria-current',on?'page':'false')});tk()}
+let PT=null;
+function R(){P=S.prog||DEF;ap();$('#v').innerHTML={w:vw,r:vr,g:vg,p:vp,s:vs}[tab]();liquidTab();document.querySelectorAll('nav button').forEach(b=>{const on=b.dataset.t==tab;b.classList.toggle('on',on);b.setAttribute('aria-current',on?'page':'false')});tk()}
 
 // ---------- ohjelman muokkaus ----------
 function moveEx(k,i,j){const L=P[k][1];if(j<0||j>=L.length)return;[L[i],L[j]]=[L[j],L[i]];S.prog=P;const d=S.draft;if(d&&d.day==k&&d.ex&&d.ex[i]&&d.ex[j])[d.ex[i],d.ex[j]]=[d.ex[j],d.ex[i]];UI={};sv();R()}
@@ -342,7 +343,7 @@ document.addEventListener('change',e=>{const t=e.target;
   if(t.id=='bf'&&t.files[0]){t.files[0].text().then(restore);t.value=''}
   if(t.dataset.r0){S.run0=Math.min(10,nu(t.value)||5);sv();R()}});
 
-document.addEventListener('click',e=>{const nb=e.target.closest('nav button');if(nb){tab=nb.dataset.t;UI.pe=0;UI.re=0;R();scrollTo(0,0);return}
+document.addEventListener('click',e=>{const nb=e.target.closest('nav button');if(nb){tab=nb.dataset.t;UI.pe=0;UI.re=0;R();scrollTo(0,0);document.body.classList.remove('min','scr');return}
   const t=e.target.closest('[data-a]');if(!t)return;const a=t.dataset.a,x=+t.dataset.x,s=+t.dataset.s,d=S.draft;
   switch(a){
   case'ck':{const X=d.ex[x],o=X.s[s];if(!o.d&&!(nu(o.r)>0)){toast('Kirjaa ensin toistot.');const inp=document.querySelector(`input[data-x="${x}"][data-s="${s}"][data-f="r"]`);if(inp)inp.focus();return}
@@ -402,7 +403,37 @@ document.addEventListener('click',e=>{const nb=e.target.closest('nav button');if
   }
 });
 
+// ---------- nestemäinen lasi ----------
+const RM=matchMedia('(prefers-reduced-motion: reduce)'),NAV=$('nav'),LENS=document.createElement('i');LENS.className='lens';NAV.prepend(LENS);
+const NB=()=>[...NAV.querySelectorAll('button')];
+// välilehden linssi liukuu valittuun kohtaan ja venyy matkalla; sisältö piirtyy esiin
+function liquidTab(){const i=NB().findIndex(b=>b.dataset.t==tab);NAV.style.setProperty('--i',i);
+  if(PT!==null&&PT!==tab&&!RM.matches){if(LENS.animate)LENS.animate([{scale:'1 1'},{scale:'1.28 .86',offset:.38},{scale:'.96 1.04',offset:.72},{scale:'1 1'}],{duration:600,easing:'ease-out'});const m=$('#v');m.classList.remove('liq');void m.offsetWidth;m.classList.add('liq')}
+  PT=tab;shine()}
+// valojuova liukuu korteilla vierityksen mukana
+function shine(){const h=innerHeight;document.querySelectorAll('main .card').forEach(c=>{const r=c.getBoundingClientRect();if(r.bottom<0||r.top>h)return;c.style.setProperty('--sp',((r.top+r.height/2)/h).toFixed(3))});
+  document.documentElement.style.setProperty('--gp',(scrollY/Math.max(1,document.documentElement.scrollHeight-h)).toFixed(3))}
+// kosketus: kirkas kohta seuraa sormea ja nappi joustaa
+const lit=(el,e)=>{const r=el.getBoundingClientRect();el.style.setProperty('--hx',((e.clientX-r.left)/r.width*100).toFixed(1)+'%');el.style.setProperty('--hy',((e.clientY-r.top)/r.height*100).toFixed(1)+'%')};
+let PRS=[];
+document.addEventListener('pointerdown',e=>{if(RM.matches)return;const b=e.target.closest('.ch,.btn,.ck,.ib,.tx'),g=e.target.closest('.card,#bar,nav');PRS=[b,g].filter(Boolean);PRS.forEach(x=>{lit(x,e);x.classList.add('lit')});if(b)b.classList.add('pr')},{passive:true});
+document.addEventListener('pointermove',e=>{if(PRS.length)PRS.forEach(x=>lit(x,e))},{passive:true});
+const rls=()=>{PRS.forEach(x=>x.classList.remove('lit','pr'));PRS=[]};
+document.addEventListener('pointerup',rls,{passive:true});document.addEventListener('pointercancel',rls,{passive:true});
+// alapalkin linssiä voi vetää sormella välilehdeltä toiselle
+let ND=null;
+NAV.addEventListener('pointerdown',e=>{ND={x:e.clientX,m:false}});
+NAV.addEventListener('pointermove',e=>{if(!ND)return;if(!ND.m&&Math.abs(e.clientX-ND.x)>8){ND.m=true;LENS.classList.add('drag')}
+  if(ND.m){const nr=NAV.getBoundingClientRect(),w=LENS.offsetWidth,l=LENS.offsetLeft,x=Math.max(0,Math.min(nr.width-w-2*l,e.clientX-nr.left-w/2-l));LENS.style.transform=`translateX(${x}px)`}});
+const nup=e=>{if(!ND)return;const m=ND.m;ND=null;LENS.classList.remove('drag');if(!m)return;const nr=NAV.getBoundingClientRect(),bs=NB(),c=e.clientX-nr.left;
+  let k=0,best=1e9;bs.forEach((b,i)=>{const r=b.getBoundingClientRect(),d=Math.abs(r.left+r.width/2-nr.left-c);if(d<best){best=d;k=i}});LENS.style.transform='';if(bs[k].dataset.t!==tab)bs[k].click()};
+NAV.addEventListener('pointerup',nup);NAV.addEventListener('pointercancel',()=>{ND=null;LENS.classList.remove('drag');LENS.style.transform=''});
+addEventListener('resize',shine);
+
 R();
+// vieritys: lasipinnat sumentavat enemmän sisällön päällä, ja palkit tiivistyvät alaspäin vieritettäessä
+let LY=scrollY,RAF=0;addEventListener('scroll',()=>{if(RAF)return;RAF=requestAnimationFrame(()=>{RAF=0;const y=Math.max(0,scrollY),dy=y-LY,b=document.body;b.classList.toggle('scr',y>6);shine();
+  if(y<40||dy<-10){b.classList.remove('min');LY=y}else if(dy>10){if(y>120)b.classList.add('min');LY=y}})},{passive:true});
 // näyttö pysyy päällä treenin aikana
 let WL=null;async function wl(){try{if('wakeLock' in navigator&&document.visibilityState=='visible'&&!WL){WL=await navigator.wakeLock.request('screen');WL.addEventListener('release',()=>{WL=null})}}catch(e){}}
 document.addEventListener('visibilitychange',wl);document.addEventListener('click',wl);wl();

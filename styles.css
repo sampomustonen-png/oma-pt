@@ -1,122 +1,167 @@
-/* Oma PT: ulkoasu. Värit on koottu muuttujiksi, tumma teema määritellään alla.
-   Ajastin ja alapalkki ovat kelluvia lasipintoja (Liquid Glass -tyyli). */
+/* Oma PT: ulkoasu Liquid Glass -tyyliin.
+   Kaikki pinnat ovat läpikuultavaa lasia värikkään taustan päällä. Värit ja lasin voimakkuus ovat muuttujina alla. */
 :root{
-  --bg:#f2f2f7;--c:#fff;--t:#000;--m:#6c6c70;--a:#007aff;--ok:#34c759;--wr:#ff3b30;--b:#d1d1d6;
-  --f:rgba(120,120,128,.12);--f2:rgba(120,120,128,.16);--cb:rgba(0,0,0,.04);
-  --sh:0 1px 2px rgba(0,0,0,.03),0 10px 30px rgba(0,0,0,.05);
-  /* lasi */
-  --gl:rgba(255,255,255,.82);--gl2:rgba(255,255,255,.68);--gle:rgba(255,255,255,.85);--gls:0 12px 36px rgba(0,0,0,.14),0 2px 8px rgba(0,0,0,.06);
-  --sel:rgba(0,0,0,.07);--amb1:rgba(0,122,255,.12);--amb2:rgba(52,199,89,.09);--amb3:rgba(175,82,222,.08);
+  --bg:#e8edf6;--t:#0b0b10;--m:rgba(28,28,38,.64);--a:#007aff;--ok:#34c759;--wr:#ff3b30;--b:rgba(0,0,0,.10);
+  /* kortit */
+  --glass:rgba(255,255,255,.24);--glass2:rgba(255,255,255,.10);--cblur:22px;
+  /* täytöt: kentät, napit ja sisäpaneelit */
+  --fill:rgba(255,255,255,.42);--fill2:rgba(255,255,255,.26);--hi:rgba(255,255,255,.75);
+  /* reunaheijastus ja hehku */
+  --rim1:rgba(255,255,255,.95);--rim2:rgba(255,255,255,.16);--glow:rgba(255,255,255,.45);
+  /* kelluvat palkit */
+  --bar1:rgba(255,255,255,.12);--bar2:rgba(255,255,255,.03);--barS1:rgba(255,255,255,.32);--barS2:rgba(255,255,255,.16);
+  --gls:0 10px 30px rgba(20,30,70,.10),0 1px 2px rgba(20,30,70,.06);--gtx:0 0 8px rgba(255,255,255,.9);
+  --sel:rgba(0,0,0,.08);--solid:#fff;--sha:.22;--lmax:.55;
+  /* taustan värit */
+  --m1:rgba(120,180,255,.75);--m2:rgba(140,235,200,.6);--m3:rgba(250,190,225,.6);--m4:rgba(255,220,140,.5);
   color-scheme:light dark
 }
 @media(prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --bg:#000;--c:#1c1c1e;--t:#fff;--m:#98989f;--a:#0a84ff;--ok:#30d158;--wr:#ff453a;--b:#38383a;--cb:rgba(255,255,255,.07);--sh:none;
-  --gl:rgba(58,58,64,.8);--gl2:rgba(30,30,32,.72);--gle:rgba(255,255,255,.16);--gls:0 12px 36px rgba(0,0,0,.6);
-  --sel:rgba(255,255,255,.12);--amb1:rgba(10,132,255,.16);--amb2:rgba(48,209,88,.08);--amb3:rgba(191,90,242,.10)}}
+  --bg:#05070d;--t:#fff;--m:rgba(235,235,245,.64);--a:#0a84ff;--ok:#30d158;--wr:#ff453a;--b:rgba(255,255,255,.12);
+  --glass:rgba(255,255,255,.07);--glass2:rgba(255,255,255,.02);
+  --fill:rgba(255,255,255,.10);--fill2:rgba(255,255,255,.06);--hi:rgba(255,255,255,.14);
+  --rim1:rgba(255,255,255,.40);--rim2:rgba(255,255,255,.05);--glow:rgba(255,255,255,.05);
+  --bar1:rgba(28,28,34,.20);--bar2:rgba(10,10,14,.08);--barS1:rgba(28,28,34,.45);--barS2:rgba(12,12,16,.32);
+  --gls:0 10px 30px rgba(0,0,0,.5);--gtx:0 0 8px rgba(0,0,0,.8);--sel:rgba(255,255,255,.14);--solid:#1c1c1e;--sha:.07;--lmax:.22;
+  --m1:rgba(37,99,235,.55);--m2:rgba(13,148,136,.42);--m3:rgba(124,58,237,.45);--m4:rgba(190,24,93,.28)}}
 :root[data-theme="dark"]{
-  --bg:#000;--c:#1c1c1e;--t:#fff;--m:#98989f;--a:#0a84ff;--ok:#30d158;--wr:#ff453a;--b:#38383a;--cb:rgba(255,255,255,.07);--sh:none;
-  --gl:rgba(58,58,64,.8);--gl2:rgba(30,30,32,.72);--gle:rgba(255,255,255,.16);--gls:0 12px 36px rgba(0,0,0,.6);
-  --sel:rgba(255,255,255,.12);--amb1:rgba(10,132,255,.16);--amb2:rgba(48,209,88,.08);--amb3:rgba(191,90,242,.10)}
+  --bg:#05070d;--t:#fff;--m:rgba(235,235,245,.64);--a:#0a84ff;--ok:#30d158;--wr:#ff453a;--b:rgba(255,255,255,.12);
+  --glass:rgba(255,255,255,.07);--glass2:rgba(255,255,255,.02);
+  --fill:rgba(255,255,255,.10);--fill2:rgba(255,255,255,.06);--hi:rgba(255,255,255,.14);
+  --rim1:rgba(255,255,255,.40);--rim2:rgba(255,255,255,.05);--glow:rgba(255,255,255,.05);
+  --bar1:rgba(28,28,34,.20);--bar2:rgba(10,10,14,.08);--barS1:rgba(28,28,34,.45);--barS2:rgba(12,12,16,.32);
+  --gls:0 10px 30px rgba(0,0,0,.5);--gtx:0 0 8px rgba(0,0,0,.8);--sel:rgba(255,255,255,.14);--solid:#1c1c1e;--sha:.07;--lmax:.22;
+  --m1:rgba(37,99,235,.55);--m2:rgba(13,148,136,.42);--m3:rgba(124,58,237,.45);--m4:rgba(190,24,93,.28)}
 
 *,*::before,*::after{box-sizing:border-box;-webkit-tap-highlight-color:transparent;font-family:Arial,Helvetica,sans-serif}
 html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 96px);scroll-padding-bottom:calc(env(safe-area-inset-bottom,0px) + 110px)}
 body{margin:0;background:var(--bg);color:var(--t);font-size:16px;line-height:1.45;-webkit-font-smoothing:antialiased}
-/* pehmeä värihehku taustalla, jotta lasipinnat erottuvat */
+/* värikäs tausta, jonka lasi taittaa */
 body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:
-  radial-gradient(70% 45% at 0% 0%,var(--amb1),transparent 70%),
-  radial-gradient(60% 40% at 100% 35%,var(--amb2),transparent 70%),
-  radial-gradient(70% 45% at 40% 100%,var(--amb3),transparent 70%)}
-/* tilarivin taustahäivytys: kellonaika ja akku pysyvät luettavina sisällön päällä */
+  radial-gradient(60% 45% at 8% 4%,var(--m1),transparent 70%),
+  radial-gradient(55% 40% at 100% 28%,var(--m2),transparent 70%),
+  radial-gradient(65% 45% at 85% 92%,var(--m3),transparent 70%),
+  radial-gradient(55% 40% at 0% 78%,var(--m4),transparent 70%),var(--bg)}
+/* tilarivin taustahäivytys: kellonaika ja akku pysyvät luettavina */
 body::before{content:"";position:fixed;inset:0 0 auto;height:calc(env(safe-area-inset-top,0px) + 8px);z-index:10;pointer-events:none;
-  background:linear-gradient(180deg,rgba(0,0,0,.5),rgba(0,0,0,0));-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+  background:linear-gradient(180deg,rgba(0,0,0,.45),rgba(0,0,0,0));-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
   -webkit-mask-image:linear-gradient(#000 55%,transparent);mask-image:linear-gradient(#000 55%,transparent)}
 button{font:inherit;color:inherit}
 [hidden]{display:none!important}
 
-/* lasipinta */
-#bar,nav,#toast{background:linear-gradient(180deg,var(--gl),var(--gl2));
-  -webkit-backdrop-filter:blur(30px) saturate(190%);backdrop-filter:blur(30px) saturate(190%);
-  border:.5px solid var(--gle);box-shadow:inset 0 1px 0 var(--gle),inset 0 -1px 0 rgba(255,255,255,.06),var(--gls)}
-#bar::before,nav::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
-  background:radial-gradient(120% 90% at 15% 0%,rgba(255,255,255,.28),transparent 55%)}
-@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){#bar,nav,#toast{background:var(--c)}}
-@media(prefers-reduced-transparency:reduce){#bar,nav,#toast{background:var(--c);-webkit-backdrop-filter:none;backdrop-filter:none}}
+/* ---------- lasi ---------- */
+.card,#bar,nav,#toast{position:relative;box-shadow:inset 0 0 18px var(--glow),inset 0 1px 1px var(--rim1),var(--gls)}
+.card{background:linear-gradient(160deg,var(--glass),var(--glass2));-webkit-backdrop-filter:blur(var(--cblur)) saturate(180%);backdrop-filter:blur(var(--cblur)) saturate(180%)}
+#bar,nav,#toast{background:linear-gradient(160deg,var(--bar1),var(--bar2));-webkit-backdrop-filter:blur(8px) saturate(200%) brightness(1.05);backdrop-filter:blur(8px) saturate(200%) brightness(1.05);
+  transition:background .4s,width .45s cubic-bezier(.2,.9,.25,1),padding .45s cubic-bezier(.2,.9,.25,1),border-radius .45s,-webkit-backdrop-filter .4s,backdrop-filter .4s}
+/* kirkas vino reunaheijastus */
+.card::after,#bar::after,nav::after,#toast::after{content:"";position:absolute;inset:0;border-radius:inherit;padding:1.2px;pointer-events:none;
+  background:linear-gradient(135deg,var(--rim1),var(--rim2) 32%,var(--rim2) 68%,var(--rim1));
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
+/* pinnan kiilto */
+/* nestemäinen valo: kirkas kohta seuraa kosketusta ja valojuova liukuu pinnoilla vierityksen mukana */
+@property --lt{syntax:'<number>';inherits:false;initial-value:0}
+.card::before,#bar::before,nav::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  background:radial-gradient(circle at var(--hx,50%) var(--hy,40%),rgba(255,255,255,calc(var(--lt)*var(--lmax))) 0,transparent 48%),
+    linear-gradient(115deg,transparent calc(var(--sp,.5)*140% - 48%),rgba(255,255,255,var(--sha)) calc(var(--sp,.5)*140% - 22%),transparent calc(var(--sp,.5)*140% + 4%)),
+    linear-gradient(180deg,rgba(255,255,255,.12),transparent 40%);
+  transition:--lt .6s ease-out}
+#bar::before,nav::before{--sp:var(--gp,.3)}
+.card.lit::before,#bar.lit::before,nav.lit::before{--lt:1;transition:--lt .1s}
+/* kun sisältö vierii palkkien alle, lasi sumentaa enemmän luettavuuden vuoksi */
+body.scr #bar:not(.done),body.scr nav{background:linear-gradient(160deg,var(--barS1),var(--barS2));-webkit-backdrop-filter:blur(14px) saturate(210%) brightness(1.05);backdrop-filter:blur(14px) saturate(210%) brightness(1.05)}
+/* täyttö: kentät, napit ja sisäpaneelit */
+.ch,.btn.g,.ib,.tx,input,select,textarea,.lv,.gd,.hs,.rpx>div,.ck{box-shadow:inset 0 1px 0 var(--hi),inset 0 0 0 .5px var(--rim2)}
 
-/* kelluva ajastin */
+/* ---------- kelluva ajastin ---------- */
 #bar{position:fixed;z-index:11;top:calc(env(safe-area-inset-top,0px) + 6px);left:50%;transform:translateX(-50%);width:calc(100% - 24px);max-width:536px;
-  border-radius:28px;padding:8px 10px 8px 18px;display:flex;align-items:center;gap:8px;color:var(--t);transition:background .3s}
+  border-radius:30px;padding:8px 10px 8px 18px;display:flex;align-items:center;gap:8px;color:var(--t)}
 #bar>*{position:relative}
-#bar.done{background:linear-gradient(180deg,color-mix(in srgb,var(--a) 92%,#fff),var(--a));color:#fff;border-color:rgba(255,255,255,.4)}
+#bar.done{background:linear-gradient(160deg,color-mix(in srgb,var(--a) 75%,transparent),color-mix(in srgb,var(--a) 50%,transparent));color:#fff}
 .tw{min-width:76px;line-height:1}
-#tm{font-size:32px;font-weight:700;letter-spacing:-1px;font-variant-numeric:tabular-nums}
-#tl{font-size:11px;color:var(--m);margin-top:3px;max-width:96px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-#bar.done #tl{color:rgba(255,255,255,.85)}
-.tx{flex:none;width:34px;height:34px;border-radius:50%;border:0;background:var(--sel);color:inherit;font-size:15px}
-#bar .cs{flex:1;-webkit-mask-image:linear-gradient(90deg,#000 88%,transparent);mask-image:linear-gradient(90deg,#000 88%,transparent);padding-right:14px}
-#bar .ch{background:var(--sel);color:inherit;padding:8px 12px}
-#bar.done .ch,#bar.done .tx{background:rgba(255,255,255,.22);color:#fff}
+#tm{font-size:32px;font-weight:700;letter-spacing:-1px;font-variant-numeric:tabular-nums;text-shadow:var(--gtx);transition:font-size .4s cubic-bezier(.2,.9,.25,1)}
+#tl{font-size:11px;color:var(--m);margin-top:3px;max-width:96px;max-height:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:var(--gtx);transition:max-height .3s,opacity .25s,margin .3s}
+#bar.done #tm,#bar.done #tl{text-shadow:none}#bar.done #tl{color:rgba(255,255,255,.9)}
+.tx{flex:none;width:34px;height:34px;border-radius:50%;border:0;background:var(--fill);color:inherit;font-size:15px}
+#bar .cs{flex:1;margin:-6px 0 -12px -6px;-webkit-mask-image:linear-gradient(90deg,#000 86%,transparent);mask-image:linear-gradient(90deg,#000 86%,transparent);padding-right:14px}
+#bar .ch{padding:8px 12px;transition:padding .4s,font-size .4s,background .2s}
+#bar.done .ch,#bar.done .tx{background:rgba(255,255,255,.24);color:#fff}
+body.min #bar{width:calc(100% - 44px);padding:5px 8px 5px 16px}
+body.min #tm{font-size:24px}
+body.min #tl{max-height:0;opacity:0;margin-top:0}
+body.min #bar .ch{padding:6px 10px;font-size:13px}
+body.min .tx{width:28px;height:28px}
 
-/* yleiset osat */
-main{padding:calc(env(safe-area-inset-top,0px) + 84px) 16px calc(env(safe-area-inset-bottom,0px) + 112px);max-width:560px;margin:auto}
-.card{background:var(--c);border:.5px solid var(--cb);border-radius:24px;padding:20px;margin-bottom:14px;box-shadow:var(--sh)}
+/* ---------- yleiset osat ---------- */
+main{padding:calc(env(safe-area-inset-top,0px) + 84px) 14px calc(env(safe-area-inset-bottom,0px) + 112px);max-width:560px;margin:auto}
+.card{border-radius:28px;padding:20px;margin-bottom:14px}
 h2,h3{margin:0 0 4px}
 h2{font-size:26px;font-weight:700;letter-spacing:-.6px}
 h3{font-size:17px;font-weight:700;letter-spacing:-.2px}
 .m{color:var(--m);font-size:14px;line-height:1.45}
 p{margin:6px 0}
 ul{margin:6px 0 0;padding-left:20px}li{margin-bottom:5px}
-.cs{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}.cs::-webkit-scrollbar{display:none}
-.cs.wrap{flex-wrap:wrap;overflow:visible}
-.ch{flex:none;border:0;background:var(--f2);color:var(--t);border-radius:999px;padding:8px 14px;font-size:14px;font-weight:600;transition:background .15s,transform .12s}
-.ch.on{background:var(--a);color:#fff}
-.ch:active,.btn:active,.ib:active,nav button:active{transform:scale(.96)}
-.btn{display:block;width:100%;margin-top:10px;padding:15px;border:0;border-radius:999px;background:var(--a);color:#fff;font-size:17px;font-weight:600;text-align:center;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 6px 18px color-mix(in srgb,var(--a) 32%,transparent);transition:transform .12s}
-.btn.g{background:var(--f2);color:var(--a);box-shadow:none}
+.cs{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:6px 6px 12px;margin:-6px -6px -12px}.cs::-webkit-scrollbar{display:none}
+.cs.wrap{flex-wrap:wrap;overflow:visible;padding:0;margin:0}
+.ch{flex:none;border:0;background:var(--fill);color:var(--t);border-radius:999px;padding:8px 14px;font-size:14px;font-weight:600}
+.ch.on,.btn{background:linear-gradient(180deg,color-mix(in srgb,var(--a) 82%,#fff),var(--a));color:#fff;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.5),inset 0 0 0 .5px rgba(255,255,255,.25),0 6px 16px color-mix(in srgb,var(--a) 30%,transparent)}
+/* napit joustavat painettaessa kuin pisara ja kirkastuvat kosketuskohdasta */
+.ch,.btn,.ck,.ib,.tx{position:relative;transition:transform .55s cubic-bezier(.3,1.7,.45,1),background .2s,box-shadow .2s}
+.ch::before,.btn::before,.ck::before,.ib::before,.tx::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  background:radial-gradient(circle at var(--hx,50%) var(--hy,20%),rgba(255,255,255,.55),transparent 62%);opacity:0;transition:opacity .5s}
+.lit::before{opacity:1;transition:opacity .08s}
+.ch.pr,.ck.pr,.ib.pr,.tx.pr{transform:scale(1.1);transition-duration:.25s}
+.btn.pr{transform:scale(1.025);transition-duration:.25s}
+.btn{display:block;width:100%;margin-top:10px;padding:15px;border:0;border-radius:999px;font-size:17px;font-weight:600;text-align:center;transition:transform .12s}
+.btn.g{background:var(--fill);color:var(--a)}
 .btn.dg,.lnk.dg{color:var(--wr)}
-.lnk{display:block;margin:4px auto 0;border:0;background:none;color:var(--a);font-size:15px;padding:10px}
-.ib{width:36px;height:36px;flex:none;border:0;border-radius:12px;background:var(--f2);font-size:16px}
+.lnk{display:block;margin:4px auto 0;border:0;background:none;color:var(--a);font-size:15px;padding:10px;text-shadow:var(--gtx)}
+.ib{width:36px;height:36px;flex:none;border:0;border-radius:12px;background:var(--fill);font-size:16px}
 .ib:disabled{opacity:.3}
-input,select,textarea{width:100%;font-size:17px;padding:11px 12px;border:0;border-radius:12px;background:var(--f);color:var(--t)}
+input,select,textarea{width:100%;font-size:17px;padding:11px 12px;border:0;border-radius:14px;background:var(--fill);color:var(--t)}
+input::placeholder,textarea::placeholder{color:var(--m)}
 input:focus,select:focus,textarea:focus{outline:2px solid color-mix(in srgb,var(--a) 55%,transparent);outline-offset:0}
 textarea{resize:vertical}
 .fl{display:block;margin-top:10px;color:var(--m);font-size:14px}
 .fl input,.fl textarea,.fl select{margin-top:4px}
 summary{font-weight:700;padding:2px 0;cursor:pointer}
-.note{background:color-mix(in srgb,var(--a) 12%,transparent);border-radius:12px;padding:8px 10px;font-size:14px;margin:8px 0}
+.note{background:color-mix(in srgb,var(--a) 16%,transparent);border-radius:14px;padding:8px 10px;font-size:14px;margin:8px 0;box-shadow:inset 0 1px 0 var(--hi)}
 .big{font-size:46px;font-weight:800;letter-spacing:-1.5px;line-height:1.1}
-.wk{display:flex;gap:6px;margin:10px 0}.wk i{flex:1;height:8px;border-radius:4px;background:var(--b)}
+.wk{display:flex;gap:6px;margin:10px 0}.wk i{flex:1;height:8px;border-radius:4px;background:var(--fill);box-shadow:inset 0 0 0 .5px var(--rim2)}
 .wk i.p{background:var(--a)}.wk i.d{background:var(--ok)}.wk i.m{background:repeating-linear-gradient(90deg,var(--b) 0 4px,transparent 4px 7px)}
 .ver{text-align:center}
 
-/* treeni */
-.top .cs{margin:8px 0 10px}
+/* ---------- treeni ---------- */
+.top .cs{margin:2px -6px -2px}
 .ex .eh{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
 .ex .eb{display:flex;gap:6px}
 .mn{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
-.gd,.hs,.rpx>div{background:var(--bg);border-radius:16px;padding:10px 12px;margin:8px 0;font-size:15px}
+.gd,.hs,.rpx>div{background:var(--fill2);border-radius:18px;padding:10px 12px;margin:8px 0;font-size:15px}
 .gd p,.hs p{margin:0 0 6px}.gd ol{margin:4px 0 8px;padding-left:20px}.gd a{color:var(--a);font-weight:600}
 .ntx textarea{margin-top:8px;font-size:15px}
-.lv{background:var(--bg);border-radius:16px;padding:9px 12px;margin-top:8px;font-size:15px}
+.lv{background:var(--fill2);border-radius:18px;padding:9px 12px;margin-top:8px;font-size:15px}
 .wu{margin-top:6px}
 .row{display:grid;grid-template-columns:44px 1fr 1fr 48px;gap:8px;align-items:center;margin-top:8px}
 .row.hd{color:var(--m);font-size:13px;margin-top:12px}
 .row>b{display:flex;flex-direction:column;line-height:1.1}
 .row>b small{font-size:10px;font-weight:400;color:var(--m);margin-top:2px;white-space:nowrap}
-.ck{width:44px;height:44px;justify-self:center;border-radius:50%;border:2px solid var(--b);background:none;color:var(--m);font-size:20px;transition:background .15s,border-color .15s,transform .12s}
-.ck.on{background:var(--ok);border-color:var(--ok);color:#fff;box-shadow:0 4px 12px color-mix(in srgb,var(--ok) 35%,transparent)}
+.ck{width:44px;height:44px;justify-self:center;border-radius:50%;border:0;background:var(--fill2);color:var(--m);font-size:20px;transition:background .2s,transform .12s}
+.ck.on{background:linear-gradient(180deg,color-mix(in srgb,var(--ok) 80%,#fff),var(--ok));color:#fff;box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 4px 12px color-mix(in srgb,var(--ok) 35%,transparent)}
 .sk{display:flex;justify-content:space-between;align-items:center;gap:8px}.sk h3{margin:0;color:var(--m);flex:1}
 
-/* ohjelma */
+/* ---------- ohjelma ---------- */
 .dh{margin:14px 0 4px;font-weight:700}
 .pl{display:grid;grid-template-columns:1fr auto auto auto;gap:6px;align-items:center;padding:6px 0;border-top:.5px solid var(--b)}
 .pl small{display:block}
 
-/* edistyminen */
+/* ---------- edistyminen ---------- */
 .cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center}.cal span{font-size:12px}
-.cd{display:flex;flex-direction:column;align-items:center;justify-content:center;aspect-ratio:1;border-radius:12px;font-weight:600;font-size:15px}
+.cd{display:flex;flex-direction:column;align-items:center;justify-content:center;aspect-ratio:1;border-radius:14px;font-weight:600;font-size:15px}
 .cd small{font-size:9px;font-weight:500;min-height:10px}
-.cd.g{background:var(--a);color:#fff}.cd.r{background:var(--ok);color:#fff}.cd.g.r{background:linear-gradient(135deg,var(--a) 50%,var(--ok) 50%)}
+.cd.g{background:linear-gradient(180deg,color-mix(in srgb,var(--a) 80%,#fff),var(--a));color:#fff;box-shadow:inset 0 1px 0 rgba(255,255,255,.45)}
+.cd.r{background:linear-gradient(180deg,color-mix(in srgb,var(--ok) 80%,#fff),var(--ok));color:#fff;box-shadow:inset 0 1px 0 rgba(255,255,255,.45)}
+.cd.g.r{background:linear-gradient(135deg,var(--a) 50%,var(--ok) 50%)}
 .cd.t{outline:2px solid var(--t)}
 .chart{width:100%;height:auto;display:block;margin-top:6px}
 .chart text{font-size:10px;fill:var(--m)}
@@ -130,17 +175,41 @@ details.hi{border-top:.5px solid var(--b);padding:8px 0}
 details.hi summary{font-weight:600}
 .rl{display:grid;grid-template-columns:1fr auto auto;gap:6px;align-items:center;padding:6px 0;border-top:.5px solid var(--b);font-size:15px}
 
-/* kelluva alapalkki */
+/* ---------- kelluva alapalkki ---------- */
 nav{position:fixed;z-index:11;left:50%;transform:translateX(-50%);bottom:max(10px,calc(env(safe-area-inset-bottom,0px) - 8px));
-  width:calc(100% - 24px);max-width:536px;display:flex;gap:2px;border-radius:32px;padding:6px}
-nav button{position:relative;flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:7px 0 5px;border:0;border-radius:26px;background:none;
-  color:var(--t);opacity:.72;font-size:10.5px;font-weight:500;transition:background .25s,color .2s,opacity .2s,transform .12s}
-nav .on{background:var(--sel);color:var(--a);opacity:1;font-weight:600}
+  width:calc(100% - 24px);max-width:536px;display:flex;gap:2px;border-radius:34px;padding:6px}
+nav button{position:relative;flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:7px 0 5px;border:0;border-radius:28px;background:none;
+  color:var(--t);font-size:10.5px;font-weight:500;transition:background .3s,color .2s,padding .45s cubic-bezier(.2,.9,.25,1),transform .12s}
+nav button svg{filter:drop-shadow(var(--gtx));opacity:.88;transition:opacity .2s}
+nav button span{max-height:14px;opacity:.88;text-shadow:var(--gtx);transition:max-height .35s,opacity .25s}
+nav{touch-action:none}
+nav button{z-index:1}
+nav .on{color:var(--a);font-weight:600}
+/* valitun välilehden linssi liukuu ja venyy kuin neste; sitä voi myös vetää sormella */
+nav .lens{position:absolute;z-index:0;left:6px;top:6px;bottom:6px;width:calc((100% - 20px)/5);border-radius:28px;pointer-events:none;
+  background:var(--sel);box-shadow:inset 0 0 0 .5px var(--rim2),inset 0 1px 0 var(--hi),inset 0 0 10px var(--glow);
+  transform:translateX(calc(var(--i,0)*(100% + 2px)));
+  transition:transform .6s cubic-bezier(.3,1.35,.45,1),left .45s,top .45s,bottom .45s,width .45s,background .3s,box-shadow .3s}
+nav .lens.drag{transition:left .45s,top .45s,bottom .45s,width .45s,background .3s,box-shadow .3s;background:color-mix(in srgb,var(--sel) 60%,transparent);
+  box-shadow:inset 0 0 0 1px var(--rim1),inset 0 1px 1px var(--rim1),inset 0 0 16px var(--glow),0 6px 18px rgba(0,0,0,.12);scale:1.12 1.1}
+body.min nav .lens{left:4px;top:4px;bottom:4px;width:calc((100% - 16px)/5)}
+/* välilehden vaihto: sisältö piirtyy esiin sumeasta kuin lasin läpi */
+@keyframes liq{from{opacity:.35;filter:blur(10px);transform:scale(.985)}to{opacity:1;filter:none;transform:none}}
+main.liq{animation:liq .42s cubic-bezier(.2,.9,.25,1)}
+nav .on svg,nav .on span{opacity:1}
 nav .on svg{stroke-width:2.2}
+body.min nav{width:min(300px,calc(100% - 24px));padding:4px;border-radius:30px}
+body.min nav button{padding:9px 0}
+body.min nav button span{max-height:0;opacity:0}
 body.kb nav{display:none}
 
-/* ilmoitus */
-#toast{position:fixed;left:50%;bottom:calc(max(10px,calc(env(safe-area-inset-bottom,0px) - 8px)) + 78px);transform:translate(-50%,20px);color:var(--t);
-  padding:11px 18px;border-radius:22px;font-size:15px;font-weight:600;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:20;max-width:90vw;text-align:center}
+/* ---------- ilmoitus ---------- */
+#toast{position:fixed;left:50%;bottom:calc(max(10px,calc(env(safe-area-inset-bottom,0px) - 8px)) + 78px);transform:translate(-50%,20px);color:var(--t);text-shadow:var(--gtx);
+  background:linear-gradient(160deg,var(--barS1),var(--barS2));padding:11px 18px;border-radius:22px;font-size:15px;font-weight:600;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:20;max-width:90vw;text-align:center}
+#toast{transition:opacity .25s,transform .55s cubic-bezier(.3,1.5,.45,1)}
 #toast.on{opacity:1;transform:translate(-50%,0)}
-@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+
+/* ---------- vähemmän läpinäkyvyyttä tai ei sumennustukea: kiinteät pinnat ---------- */
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.card,#bar,nav,#toast,body.scr #bar,body.scr nav{background:var(--solid)}}
+@media(prefers-reduced-transparency:reduce){.card,#bar,nav,#toast,body.scr #bar,body.scr nav{background:var(--solid);-webkit-backdrop-filter:none;backdrop-filter:none}body::after{background:var(--bg)}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
