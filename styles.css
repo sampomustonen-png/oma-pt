@@ -1,11 +1,11 @@
 /* Oma PT: ulkoasu Liquid Glass -tyyliin.
-   Kaikki pinnat ovat läpikuultavaa lasia värikkään taustan päällä. Värit ja lasin voimakkuus ovat muuttujina alla. */
+   Kaikki pinnat ovat läpikuultavaa lasia hillityn vaalean tai tumman taustan päällä. Värit ja lasin voimakkuus ovat muuttujina alla. */
 :root{
-  --bg:#e8edf6;--t:#0b0b10;--m:rgba(28,28,38,.64);--a:#007aff;--ok:#34c759;--wr:#ff3b30;--b:rgba(0,0,0,.10);
+  --bg:#ececf0;--t:#0b0b10;--m:rgba(28,28,38,.64);--a:#007aff;--ok:#34c759;--wr:#ff3b30;--b:rgba(0,0,0,.10);
   /* kortit */
   --glass:rgba(255,255,255,.24);--glass2:rgba(255,255,255,.10);--cblur:22px;
   /* täytöt: kentät, napit ja sisäpaneelit */
-  --fill:rgba(255,255,255,.42);--fill2:rgba(255,255,255,.26);--hi:rgba(255,255,255,.75);
+  --fill:rgba(120,120,132,.12);--fill2:rgba(120,120,132,.07);--hi:rgba(255,255,255,.8);
   /* reunaheijastus ja hehku */
   --rim1:rgba(255,255,255,.95);--rim2:rgba(255,255,255,.16);--glow:rgba(255,255,255,.45);
   /* kelluvat palkit */
@@ -13,30 +13,30 @@
   --gls:0 10px 30px rgba(20,30,70,.10),0 1px 2px rgba(20,30,70,.06);--gtx:0 0 8px rgba(255,255,255,.9);
   --sel:rgba(0,0,0,.08);--solid:#fff;--sha:.22;--lmax:.55;
   /* taustan värit */
-  --m1:rgba(120,180,255,.75);--m2:rgba(140,235,200,.6);--m3:rgba(250,190,225,.6);--m4:rgba(255,220,140,.5);
+  --m1:rgba(255,255,255,.95);--m2:rgba(255,255,255,.55);--m3:rgba(214,214,220,.65);--m4:rgba(255,255,255,.45);
   color-scheme:light dark
 }
 @media(prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --bg:#05070d;--t:#fff;--m:rgba(235,235,245,.64);--a:#0a84ff;--ok:#30d158;--wr:#ff453a;--b:rgba(255,255,255,.12);
+  --bg:#0a0a0c;--t:#fff;--m:rgba(235,235,245,.64);--a:#0a84ff;--ok:#30d158;--wr:#ff453a;--b:rgba(255,255,255,.12);
   --glass:rgba(255,255,255,.07);--glass2:rgba(255,255,255,.02);
   --fill:rgba(255,255,255,.10);--fill2:rgba(255,255,255,.06);--hi:rgba(255,255,255,.14);
   --rim1:rgba(255,255,255,.40);--rim2:rgba(255,255,255,.05);--glow:rgba(255,255,255,.05);
   --bar1:rgba(28,28,34,.20);--bar2:rgba(10,10,14,.08);--barS1:rgba(28,28,34,.45);--barS2:rgba(12,12,16,.32);
   --gls:0 10px 30px rgba(0,0,0,.5);--gtx:0 0 8px rgba(0,0,0,.8);--sel:rgba(255,255,255,.14);--solid:#1c1c1e;--sha:.07;--lmax:.22;
-  --m1:rgba(37,99,235,.55);--m2:rgba(13,148,136,.42);--m3:rgba(124,58,237,.45);--m4:rgba(190,24,93,.28)}}
+  --m1:rgba(255,255,255,.085);--m2:rgba(255,255,255,.045);--m3:rgba(255,255,255,.035);--m4:rgba(255,255,255,.03)}}
 :root[data-theme="dark"]{
-  --bg:#05070d;--t:#fff;--m:rgba(235,235,245,.64);--a:#0a84ff;--ok:#30d158;--wr:#ff453a;--b:rgba(255,255,255,.12);
+  --bg:#0a0a0c;--t:#fff;--m:rgba(235,235,245,.64);--a:#0a84ff;--ok:#30d158;--wr:#ff453a;--b:rgba(255,255,255,.12);
   --glass:rgba(255,255,255,.07);--glass2:rgba(255,255,255,.02);
   --fill:rgba(255,255,255,.10);--fill2:rgba(255,255,255,.06);--hi:rgba(255,255,255,.14);
   --rim1:rgba(255,255,255,.40);--rim2:rgba(255,255,255,.05);--glow:rgba(255,255,255,.05);
   --bar1:rgba(28,28,34,.20);--bar2:rgba(10,10,14,.08);--barS1:rgba(28,28,34,.45);--barS2:rgba(12,12,16,.32);
   --gls:0 10px 30px rgba(0,0,0,.5);--gtx:0 0 8px rgba(0,0,0,.8);--sel:rgba(255,255,255,.14);--solid:#1c1c1e;--sha:.07;--lmax:.22;
-  --m1:rgba(37,99,235,.55);--m2:rgba(13,148,136,.42);--m3:rgba(124,58,237,.45);--m4:rgba(190,24,93,.28)}
+  --m1:rgba(255,255,255,.085);--m2:rgba(255,255,255,.045);--m3:rgba(255,255,255,.035);--m4:rgba(255,255,255,.03)}
 
 *,*::before,*::after{box-sizing:border-box;-webkit-tap-highlight-color:transparent;font-family:Arial,Helvetica,sans-serif}
 html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 96px);scroll-padding-bottom:calc(env(safe-area-inset-bottom,0px) + 110px)}
 body{margin:0;background:var(--bg);color:var(--t);font-size:16px;line-height:1.45;-webkit-font-smoothing:antialiased}
-/* värikäs tausta, jonka lasi taittaa */
+/* hillitty vaalea tai tumma tausta, jossa pehmeä valo antaa lasille syvyyttä */
 body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:
   radial-gradient(60% 45% at 8% 4%,var(--m1),transparent 70%),
   radial-gradient(55% 40% at 100% 28%,var(--m2),transparent 70%),
