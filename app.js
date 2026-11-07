@@ -209,7 +209,7 @@ function vw(){
   if(S.msg)h+=`<div class="card">${S.msg}<button class="btn" data-a="cm">Selvä</button></div>`;
   if(w>6){const n=S.hist.filter(x=>x.d>=S.start).length,r=S.runs.filter(x=>x.d>=S.start).length;
     return h+`<div class="card"><h2>Jakso ${S.block} on valmis</h2><p>Teit jakson aikana ${n} salitreeniä ja ${r} juoksua. Seuraava jakso käyttää tuloksiasi lähtökohtana: osa liikkeistä vaihtuu variaatioihin ja juoksumatka kasvaa.</p>${fb()}<button class="btn" data-a="nb">Aloita jakso ${S.block+1}</button></div>`}
-  if(!S.hist.length&&!S.hi)h+=`<div class="card"><h3>Näin aloitat</h3><ul><li>Kirjaa jokaisesta sarjasta paino ja toistot ja merkitse sarja tehdyksi ✓-napilla. ✓ käynnistää tauon ajastimen.</li><li>Kun muutat ensimmäisen sarjan painoa, seuraavat sarjat päivittyvät samaan.</li><li>Ensimmäisellä kerralla valitse kevyt paino. Sovellus ehdottaa painot jatkossa.</li><li>⋯-valikosta voit lisätä sarjan, vaihtaa liikkeen, kirjoittaa muistiinpanon, ohittaa liikkeen tai katsoa sen historian.</li></ul><button class="btn" data-a="hi">Selvä</button></div>`;
+  if(!S.hist.length&&!S.hi)h+=`<div class="card"><h3>Näin aloitat</h3><ul><li>Kirjaa jokaisesta sarjasta paino ja toistot ja merkitse sarja tehdyksi ✓-napilla. ✓ käynnistää tauon ajastimen.</li><li>Ensimmäisellä kerralla valitse kevyt paino. Sovellus ehdottaa painot jatkossa.</li><li>⋯-valikosta voit lisätä sarjan, vaihtaa liikkeen, kirjoittaa muistiinpanon, ohittaa liikkeen tai katsoa sen historian.</li></ul><button class="btn" data-a="hi">Selvä</button></div>`;
   if(!S.draft||!S.draft.ex||!ks.includes(S.draft.day)||(!S.draft.t0&&S.draft.c!==td())){S.draft=mk(nx());UI={};sv(false)}
   const d=S.draft;ensureEx(d);
   const L=P[d.day][1];let wi0=-1;L.forEach((e0,i)=>{const n=nm(ev(e0,i))[0],x=LB(n);if(wi0<0&&x&&x.k=='m'&&x.q=='s'&&!x.w&&!d.ex[i].sk)wi0=i});
@@ -339,8 +339,6 @@ document.addEventListener('focusin',e=>{if(e.target.matches('input:not([type=che
 document.addEventListener('focusout',()=>setTimeout(()=>{if(!document.activeElement||!document.activeElement.matches('input,textarea,select'))document.body.classList.remove('kb')},50));
 document.addEventListener('input',e=>{const t=e.target,d=S.draft;
   if(t.dataset.f&&d&&d.ex){const i=+t.dataset.x,j=+t.dataset.s,f=t.dataset.f,X=d.ex[i],s=X.s[j],old=String(s[f]);s[f]=t.value;s.e=1;touch();
-    // painon muutos päivittyy seuraaviin sarjoihin, joita et ole vielä kirjannut (toistot ovat sarjakohtaisia)
-    if(f==='k')for(let q=j+1;q<X.s.length;q++){const z=X.s[q];if(z.d||z.e)continue;if(String(z[f])===old||z[f]===''){z[f]=t.value;const inp=document.querySelector(`input[data-x="${i}"][data-s="${q}"][data-f="${f}"]`);if(inp)inp.value=t.value}}
     sv(false);return}
   if(t.dataset.nt!=null&&d){d.ex[+t.dataset.nt].nt=t.value;touch();sv(false);return}
   if(t.id=='wn'&&d){d.note=t.value;sv(false)}});
