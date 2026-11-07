@@ -54,7 +54,12 @@ const sq=(n,a)=>{const x=LB(n),z=LB(a);return!x||!z||(x.q==z.q&&x.w==z.w)};
 const fk=(n,k)=>{const w=wt(n);return w=='l'?(nu(k)?'+'+fm(nu(k))+' kg':'oma paino'):w=='v'?'avustus '+fm(nu(k))+' kg':fm(nu(k))+' kg'};
 const lo=n=>{for(let i=S.hist.length;i--;)if(S.hist[i].x[n])return{d:S.hist[i].d,s:S.hist[i].x[n],nt:S.hist[i].nt&&S.hist[i].nt[n]};return null};
 // ehdotettu paino: oma tulos, sitten historia, sitten saman välineen variaatio
-const gw=e=>{const[n,a]=nm(e);if(S.w[n])return S.w[n];const l=lo(n);if(l)return{kg:l.s[l.s.length-1].k,r:e[2]};const o=S.w[a];return o&&sq(n,a)?{kg:r25(o.kg*.9),r:e[2]}:null};
+// sarjakohtaiset tavoitteet: jokaiseen sarjaan yksi toisto enemmän kuin viimeksi, enintään toistoalueen yläraja
+const perSet=(ss,lo,hi)=>ss.map(s=>Math.max(lo,Math.min(hi,s.r+1)));
+const rl=a=>a.every(x=>x==a[0])?String(a[0]):a.slice(0,-1).join(', ')+' ja '+a[a.length-1];
+const gw=e=>{const[n,a]=nm(e),l=lo(n);let g=S.w[n];
+  if(g){if(!g.rs&&l&&g.kg===l.s[l.s.length-1].k){const rs=perSet(l.s,e[2],e[3]);g={...g,rs};if(/^pysy .* tavoite \d+ toistoa$/.test(g.t||''))g.t=g.t.replace(/tavoite \d+ toistoa$/,'tavoite '+rl(rs)+' toistoa')}return g}
+  if(l)return{kg:l.s[l.s.length-1].k,r:e[2]};const o=S.w[a];return o&&sq(n,a)?{kg:r25(o.kg*.9),r:e[2]}:null};
 const gd=n=>{const g=(G[n]||'Oma liike|Valitse paino, jolla jää 1–3 toistoa varaan|Tee liike hallitusti koko liikeradalla|Laske paino hitaammin kuin nostat').split('|');return`<p><b>Lihakset:</b> ${esc(g[0])}</p><ol>${g.slice(1).map(x=>`<li>${esc(x)}</li>`).join('')}</ol><a href="https://www.youtube.com/results?search_query=${encodeURIComponent(n+' exercise form')}" target="_blank" rel="noopener">Katso esimerkkivideo</a>`};
 const estMin=k=>Math.round(10+P[k][1].reduce((a,e)=>a+e[1]*(40+e[5]),0)/60);
 const nx=()=>{const ks=Object.keys(P),l=S.hist.length&&S.hist[S.hist.length-1].day;return l&&ks.includes(l)?ks[(ks.indexOf(l)+1)%ks.length]:ks[0]};
@@ -68,7 +73,8 @@ const gapDays=()=>{const l=S.hist.length&&S.hist[S.hist.length-1].d;return l?Mat
 
 // ---------- treenipohja ----------
 function mkEx(e,dl,brk){const g=gw(e),n=dl?Math.max(2,e[1]-1):e[1],[nn]=nm(e);let kg=g?g.kg:'';if(kg!==''&&(dl||brk)&&wt(nn)!='v')kg=r25(kg*.9);
-  return{s:Array.from({length:n},()=>({k:kg,r:g?g.r:'',d:0})),sw:0,sk:0,nt:'',tk:kg,tr:g?g.r:'',tt:g&&g.t||''}}
+  const rr=j=>g?(g.rs&&g.rs.length?g.rs[Math.min(j,g.rs.length-1)]:g.r):'',trs=Array.from({length:n},(_,j)=>rr(j)),cut=g&&kg!==g.kg;
+  return{s:trs.map(r=>({k:kg,r,d:0})),sw:0,sk:0,nt:'',tk:kg,tr:rr(0),trs,tt:cut?(dl?'kevennysviikolla paino on noin 10 % kevyempi':'tauon jälkeen paino on noin 10 % kevyempi'):(g&&g.t||'')}}
 function mk(day){const dl=wk()==6,brk=gapDays()>14;return{day,c:td(),note:'',brk,ex:P[day][1].map(e=>mkEx(e,dl,brk))}}
 function ensureEx(d){const L=P[d.day][1],dl=wk()==6;while(d.ex.length<L.length)d.ex.push(mkEx(L[d.ex.length],dl,d.brk));if(d.ex.length>L.length)d.ex.length=L.length}
 const touch=()=>{const d=S.draft;if(d&&!d.t0){d.t0=Date.now();d.td0=td()}};
@@ -172,7 +178,7 @@ const ld=()=>Object.assign(OB,{q:'',sp:'n',rd:'1',exp:'a',days:'3',eq:'s',goal:'
 const pf=()=>S.prof?`${{a:'Aloittelija',b:'Jonkin verran kokemusta',c:'Kokenut'}[S.prof.exp]}, ${S.prof.days} salitreeniä ja ${rdN()} ${rdN()==1?'juoksu':'juoksua'} viikossa, ${S.prof.eq=='s'?'kuntosali':'koti'}, tavoite: ${{m:'lihaskasvu',v:'voima',b:'lihaskasvu ja voima'}[S.prof.goal]}${S.prof.w?', '+esc(S.prof.w)+' kg':''}${S.prof.h?', '+esc(S.prof.h)+' cm':''}.`:'Käytössä on oletusohjelma. Luo oma ohjelma alkutiedoillasi.';
 
 // ---------- näkymä: treeni ----------
-function tgt(n,X){return X.tk!==''&&X.tk!=null?`<div class="m">Tavoite tänään: <b>${fk(n,X.tk)} × ${esc(X.tr)}</b>${X.tt?'. Ohje: '+esc(X.tt):''}</div>`:''}
+function tgt(n,X){const r=X.trs&&X.trs.length?X.trs:[X.tr];return X.tk!==''&&X.tk!=null?`<div class="m">Tavoite tänään: <b>${fk(n,X.tk)}${r.every(x=>x==r[0])?' × '+esc(r[0]):', toistot '+esc(rl(r))}</b>${X.tt?'. Ohje: '+esc(X.tt):''}</div>`:''}
 const BAR=['Back squat','Front squat','Bench press','Romanian deadlift','Conventional deadlift','Overhead press','Barbell row','Barbell hip thrust','Barbell curl'];
 function wup(X,n){const k=nu(X.tk);if(k<30)return'';const a=BAR.includes(n)?[[20,10]]:[[0,0]];for(const[p,r]of[[.5,8],[.7,5],[.85,3]]){const v=r25(k*p);if(v>a[a.length-1][0]&&v<k)a.push([v,r])}return`<div class="m wu">Lämmittelysarjat: ${a.filter(([v])=>v>0).map(([v,r])=>fm(v)+' kg × '+r).join(', ')}</div>`}
 function ro(n,i){const C=LB(n),ok=y=>y.n!=n;
@@ -219,8 +225,8 @@ ${d.brk?'<p class="note">Edellisestä treenistä on yli 2 viikkoa. Ehdotetut pai
 function prog(n,e,ss){const k=ss[ss.length-1].k,m=Math.min(...ss.map(s=>s.r)),wv=wt(n)=='v',pw=wv?'avustuksessa':'painossa';let nk=k,nr=e[2],t;
   if(ss.length>=e[1]&&m>=e[3]){nk=wv?Math.max(0,k-Math.abs(e[4])):k+e[4];S.f[n]=0;t=wv?(nk?'vähennä avustusta: '+fm(nk)+' kg':'kokeile ilman avustusta (Pull-up)'):wt(n)=='l'?'lisää lisäpainoa: +'+fm(nk)+' kg':'nosta painoa: '+fm(nk)+' kg'}
   else if(m<e[2]){S.f[n]=(S.f[n]||0)+1;if(S.f[n]>=2){S.f[n]=0;if(wv){nk=r25(k*1.1+2.5);t='lisää avustusta: '+fm(nk)+' kg'}else if(wt(n)=='l'&&!k){t='jatka omalla painolla. Jos toistot eivät nouse, tee välillä Assisted pull-up tai Negative pull-up'}else{nk=r25(k*.9);t='kevennä painoa: '+fm(nk)+' kg'}}else t='pysy '+pw+' '+fm(k)+' kg ja hae vähintään '+e[2]+' toistoa'}
-  else{S.f[n]=0;nr=Math.min(e[3],m+1);t='pysy '+pw+' '+fm(k)+' kg, tavoite '+nr+' toistoa'}
-  S.w[n]={kg:nk,r:nr,t};return t}
+  else{S.f[n]=0;const rs=perSet(ss,e[2],e[3]);nr=Math.min(...rs);t='pysy '+pw+' '+fm(k)+' kg, tavoite '+rl(rs)+' toistoa'}
+  S.w[n]={kg:nk,r:nr,t,rs:nk===k?perSet(ss,e[2],e[3]):null};return t}
 
 function fin(){const d=S.draft,dl=wk()==6,L=P[d.day][1];let un=0;
   L.forEach((e0,i)=>{const X=d.ex[i];if(X&&!X.sk)X.s.forEach(s=>{if(!s.d&&s.e&&nu(s.r)>0)un++})});
@@ -333,8 +339,8 @@ document.addEventListener('focusin',e=>{if(e.target.matches('input:not([type=che
 document.addEventListener('focusout',()=>setTimeout(()=>{if(!document.activeElement||!document.activeElement.matches('input,textarea,select'))document.body.classList.remove('kb')},50));
 document.addEventListener('input',e=>{const t=e.target,d=S.draft;
   if(t.dataset.f&&d&&d.ex){const i=+t.dataset.x,j=+t.dataset.s,f=t.dataset.f,X=d.ex[i],s=X.s[j],old=String(s[f]);s[f]=t.value;s.e=1;touch();
-    // painon tai toistojen muutos päivittyy seuraaviin sarjoihin, joita et ole vielä kirjannut
-    for(let q=j+1;q<X.s.length;q++){const z=X.s[q];if(z.d||z.e)continue;if(String(z[f])===old||z[f]===''){z[f]=t.value;const inp=document.querySelector(`input[data-x="${i}"][data-s="${q}"][data-f="${f}"]`);if(inp)inp.value=t.value}}
+    // painon muutos päivittyy seuraaviin sarjoihin, joita et ole vielä kirjannut (toistot ovat sarjakohtaisia)
+    if(f==='k')for(let q=j+1;q<X.s.length;q++){const z=X.s[q];if(z.d||z.e)continue;if(String(z[f])===old||z[f]===''){z[f]=t.value;const inp=document.querySelector(`input[data-x="${i}"][data-s="${q}"][data-f="${f}"]`);if(inp)inp.value=t.value}}
     sv(false);return}
   if(t.dataset.nt!=null&&d){d.ex[+t.dataset.nt].nt=t.value;touch();sv(false);return}
   if(t.id=='wn'&&d){d.note=t.value;sv(false)}});
