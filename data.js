@@ -1,7 +1,7 @@
 // Oma PT: liikkeet, ohjeet ja oletusohjelma.
 // Muuta liikkeen nimeä vain lisäämällä vanha nimi ALIAS-taulukkoon, jotta historia säilyy.
 'use strict';
-const VERSION=28;
+const VERSION=29;
 // liike ohjelmassa: [nimet (parittomat jaksot|parilliset jaksot), sarjat, toistot min, toistot max, painon askel, tauko s]
 const DEF={
 A:['Päivä A: jalat ja työntö',[
