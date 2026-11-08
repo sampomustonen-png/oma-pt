@@ -1,7 +1,7 @@
 // Oma PT: liikkeet, ohjeet ja oletusohjelma.
 // Muuta liikkeen nimeä vain lisäämällä vanha nimi ALIAS-taulukkoon, jotta historia säilyy.
 'use strict';
-const VERSION=27;
+const VERSION=28;
 // liike ohjelmassa: [nimet (parittomat jaksot|parilliset jaksot), sarjat, toistot min, toistot max, painon askel, tauko s]
 const DEF={
 A:['Päivä A: jalat ja työntö',[
@@ -79,76 +79,100 @@ Object.assign(G,{
 'Weighted neutral-grip pull-up':'Leveä selkä, hauikset, kyynärvarret|Kiinnitä lisäpaino painovyöhön ja tartu rinnakkaisiin kahvoihin|Vedä leuka kahvojen yläpuolelle|Laske hallitusti. Kirjaa painoksi vain lisäpaino',
 'Assisted pull-up':'Leveä selkä, hauikset|Polvistu avustuskoneen tasolle ja valitse avustus|Vedä leuka tangon yläpuolelle|Laske hallitusti. Mitä pienempi avustus, sitä raskaampi liike',
 'Negative pull-up':'Leveä selkä, hauikset|Nouse yläasentoon hyppäämällä tai korokkeen avulla|Laske itsesi hitaasti 3–5 sekunnissa suorille käsille|Palaa yläasentoon korokkeen avulla. Hyvä tapa oppia leuanveto',
+'Push-up':'Rinta, ojentajat, olkapäiden etuosa|Kädet hartioita hieman leveämmällä, vartalo suorana kuin lankussa|Laske rinta lähelle lattiaa, kyynärpäät noin 45 asteen kulmassa vartaloon|Punnerra ylös vartalo suorana. Helpota tekemällä polvien varassa tai korokkeelta',
+'Dip':'Rinta, ojentajat|Tue kädet rinnakkaisiin tankoihin tai kahden tukevan tuolin reunoille|Laske hallitusti, kunnes olkavarret ovat noin vaakatasossa|Punnerra ylös. Jätä pois, jos olkapäät oireilevat',
+'Plank':'Vatsalihakset, keskivartalo|Tue kyynärvarret lattiaan, kyynärpäät olkapäiden alla|Pidä vartalo suorana päästä kantapäihin, vatsa ja pakarat tiukkoina|Pidä asento tavoiteajan. Kirjaa toistoiksi sekunnit',
+'Inverted row':'Selkä, hauikset, takaolkapäät|Riipu matalan tangon tai tukevan pöydän reunan alla vartalo suorana|Vedä rinta kohti tankoa ja purista lapoja yhteen|Laske hallitusti. Vaikeuta nostamalla jalat korokkeelle',
+'Nordic curl':'Takareidet|Polvistu pehmusteelle ja kiinnitä nilkat tukevasti, esimerkiksi sohvan alle|Laskeudu eteenpäin mahdollisimman hitaasti vartalo suorana|Ota kiinni käsillä ja punnerra takaisin ylös. Aloita lyhyellä liikeradalla',
 'Dumbbell calf raise':'Pohkeet|Seiso toisella jalalla käsipaino kädessä, varvas korokkeella|Nouse varpaille ja pidä hetki|Laske hitaasti venytykseen'});
-// kirjasto: nimi|lihasryhmä|m=moninivel a=apuliike|s=sali b=käsipainot|toistot min|max|askel|tauko|rajoitteet (a=alaselkä p=polvet o=olkapäät)|l=lisäpaino v=avustus
-const LIB=`Back squat|jk|m|s|5|8|5|150|ap
-Front squat|jk|m|s|5|8|5|150|p
-Leg press|jk|m|s|8|12|5|120|
-Goblet squat|jk|m|b|8|12|2|90|
-Hack squat|jk|m|s|8|12|5|120|p
-Bulgarian split squat|jk|a|b|8|12|2|120|p
-Dumbbell lunge|jk|a|b|8|12|2|90|p
-Step-up|jk|a|b|8|12|2|90|p
-Leg extension|jk|a|s|10|15|2.5|60|p
-Romanian deadlift|jt|m|s|5|8|5|150|a
-Conventional deadlift|jt|m|s|5|8|5|150|a
-Dumbbell Romanian deadlift|jt|m|b|8|12|2|120|a
-Barbell hip thrust|jt|m|s|8|12|5|90|
-Glute bridge|jt|a|b|10|15|2|60|
-Lying leg curl|jt|a|s|8|12|2.5|90|
-Seated leg curl|jt|a|s|8|12|2.5|90|
-Cable pull-through|jt|a|s|10|15|2.5|60|
-Single-leg Romanian deadlift|jt|a|b|8|12|2|90|
-Bench press|rt|m|s|6|10|2.5|150|o
-Incline dumbbell press|rt|m|b|6|10|2|120|o
-Dumbbell bench press|rt|m|b|8|12|2|120|o
-Machine chest press|rt|m|s|8|12|2.5|120|
-Incline machine press|rt|a|s|8|12|2.5|90|
-Cable fly|rt|a|s|10|15|1|60|
-Dumbbell fly|rt|a|b|10|15|1|60|o
-Barbell row|sl|m|s|8|10|2.5|120|a
-Chest-supported row|sl|m|b|8|12|2|90|
-Wide-grip lat pulldown|sl|m|s|6|10|2.5|120|
-Close-grip lat pulldown|sl|m|s|8|12|2.5|90|
-One-arm dumbbell row|sl|m|b|8|12|2|90|
-Seated cable row|sl|a|s|8|12|2.5|90|
-Machine row|sl|a|s|8|12|2.5|90|
-Straight-arm pulldown|sl|a|s|10|15|2.5|60|
-Overhead press|ol|m|s|5|8|2.5|150|o
-Dumbbell shoulder press|ol|m|b|8|12|2|90|o
-Machine shoulder press|ol|m|s|8|12|2.5|90|
-Arnold press|ol|m|b|8|12|2|90|o
-Lateral raise|ol|a|b|12|15|1|60|
-Cable lateral raise|ol|a|s|12|15|1|60|
-Cable face pull|ol|a|s|12|15|1|60|
-Rear delt dumbbell raise|ol|a|b|12|15|1|60|
-Dumbbell biceps curl|hk|a|b|10|15|2|60|
-Hammer curl|hk|a|b|10|15|2|60|
-Barbell curl|hk|a|s|8|12|2.5|60|
-Cable curl|hk|a|s|10|15|2.5|60|
-Incline dumbbell curl|hk|a|b|10|15|1|60|
-Triceps pushdown|oj|a|s|10|15|2.5|60|
-Skull crusher|oj|a|s|8|12|2.5|60|
-Overhead triceps extension|oj|a|b|10|15|2|60|
-Standing calf raise|po|a|s|10|15|5|60|
-Seated calf raise|po|a|s|10|15|5|60|
-Dumbbell calf raise|po|a|b|12|20|2|60|
-Cable crunch|va|a|s|10|15|2.5|60|
-Dumbbell side bend|va|a|b|10|15|2.5|60|
-Hanging leg raise|va|a|b|8|15|1|60|
-Decline sit-up|va|a|b|10|15|1|60|
-Back extension|jt|a|s|10|15|2.5|60|a
-Weighted back extension|jt|a|s|10|15|2.5|60|a
-Pull-up|sl|m|s|5|10|2.5|150||l
-Chin-up|sl|m|s|5|10|2.5|150||l
-Neutral-grip pull-up|sl|m|s|5|10|2.5|150||l
-Wide-grip pull-up|sl|m|s|5|10|2.5|150|o|l
-Weighted pull-up|sl|m|s|4|8|2.5|180||l
-Weighted chin-up|sl|m|s|4|8|2.5|180||l
-Weighted neutral-grip pull-up|sl|m|s|4|8|2.5|180||l
-Assisted pull-up|sl|m|s|6|12|5|120||v
-Negative pull-up|sl|a|s|3|6|2.5|120||l`.split('\n').map(r=>{const[n,g,k,q,lo,hi,st,rs,f,w]=r.split('|');return{n,g,k,q,lo:+lo,hi:+hi,st:+st,rs:+rs,f:f||'',w:w||''}});
-const GN={jk:'Jalat, etureidet',jt:'Takareidet ja pakarat',rt:'Rinta',sl:'Selkä',ol:'Olkapäät',hk:'Hauikset',oj:'Ojentajat',po:'Pohkeet',va:'Vatsa'},FK={jk:'j',jt:'j',po:'j',sl:'s',rt:'r',ol:'o',hk:'k',oj:'k',va:'v'};
-const TM={f:['jkm4 rtm4 slm3 ola3 oja3 poa3 vaa3','jtm4 slm4 rta3 jka3 hka3 ola3 vaa3','jkm4 olm4 sla3 jta3 rta3 ola3 hka3'],u:['rtm4 slm4 olm3 sla3 rta3 hka3 oja3','olm4 slm4 rta4 ola3 sla3 oja3 hka3'],l:['jkm4 jtm4 jka3 jta3 poa3 vaa3','jtm4 jkm4 jka3 jta3 poa3 vaa3']};
+// kirjasto: nimi|lihasryhmä|m=moninivel a=apuliike|väline: s=sali b=käsipainot w=oma paino p=leuanvetotanko|toistot min|max|askel|tauko|rajoitteet (a=alaselkä p=polvet o=olkapäät)|l=lisäpaino v=avustus t=aika sekunteina|liikemalli
+const LIB=`Back squat|jk|m|s|5|8|5|150|ap||sq
+Front squat|jk|m|s|5|8|5|150|p||sq
+Leg press|jk|m|s|8|12|5|120|||sq
+Goblet squat|jk|m|b|8|12|2|90|||sq
+Hack squat|jk|m|s|8|12|5|120|p||sq
+Bulgarian split squat|jk|a|b|8|12|2|120|p||lu
+Dumbbell lunge|jk|a|b|8|12|2|90|p||lu
+Step-up|jk|a|b|8|12|2|90|p||lu
+Leg extension|jk|a|s|10|15|2.5|60|p||ke
+Romanian deadlift|jt|m|s|5|8|5|150|a||hi
+Conventional deadlift|jt|m|s|5|8|5|150|a||hi
+Dumbbell Romanian deadlift|jt|m|b|8|12|2|120|a||hi
+Barbell hip thrust|jt|m|s|8|12|5|90|||gl
+Glute bridge|jt|a|b|10|15|2|60|||gl
+Lying leg curl|jt|a|s|8|12|2.5|90|||kf
+Seated leg curl|jt|a|s|8|12|2.5|90|||kf
+Cable pull-through|jt|a|s|10|15|2.5|60|||gl
+Single-leg Romanian deadlift|jt|a|b|8|12|2|90|||hi
+Bench press|rt|m|s|6|10|2.5|150|o||hp
+Incline dumbbell press|rt|m|b|6|10|2|120|o||hp
+Dumbbell bench press|rt|m|b|8|12|2|120|o||hp
+Machine chest press|rt|m|s|8|12|2.5|120|||hp
+Incline machine press|rt|a|s|8|12|2.5|90|||hp
+Cable fly|rt|a|s|10|15|1|60|||fl
+Dumbbell fly|rt|a|b|10|15|1|60|o||fl
+Barbell row|sl|m|s|8|10|2.5|120|a||hr
+Chest-supported row|sl|m|b|8|12|2|90|||hr
+Wide-grip lat pulldown|sl|m|s|6|10|2.5|120|||vr
+Close-grip lat pulldown|sl|m|s|8|12|2.5|90|||vr
+One-arm dumbbell row|sl|m|b|8|12|2|90|||hr
+Seated cable row|sl|a|s|8|12|2.5|90|||hr
+Machine row|sl|a|s|8|12|2.5|90|||hr
+Straight-arm pulldown|sl|a|s|10|15|2.5|60|||sa
+Overhead press|ol|m|s|5|8|2.5|150|o||vp
+Dumbbell shoulder press|ol|m|b|8|12|2|90|o||vp
+Machine shoulder press|ol|m|s|8|12|2.5|90|||vp
+Arnold press|ol|m|b|8|12|2|90|o||vp
+Lateral raise|ol|a|b|12|15|1|60|||la
+Cable lateral raise|ol|a|s|12|15|1|60|||la
+Cable face pull|ol|a|s|12|15|1|60|||rd
+Rear delt dumbbell raise|ol|a|b|12|15|1|60|||rd
+Dumbbell biceps curl|hk|a|b|10|15|2|60|||bi
+Hammer curl|hk|a|b|10|15|2|60|||bi
+Barbell curl|hk|a|s|8|12|2.5|60|||bi
+Cable curl|hk|a|s|10|15|2.5|60|||bi
+Incline dumbbell curl|hk|a|b|10|15|1|60|||bi
+Triceps pushdown|oj|a|s|10|15|2.5|60|||tr
+Skull crusher|oj|a|s|8|12|2.5|60|||tr
+Overhead triceps extension|oj|a|b|10|15|2|60|||tr
+Standing calf raise|po|a|s|10|15|5|60|||ca
+Seated calf raise|po|a|s|10|15|5|60|||ca
+Dumbbell calf raise|po|a|b|12|20|2|60|||ca
+Cable crunch|va|a|s|10|15|2.5|60|||co
+Dumbbell side bend|va|a|b|10|15|2.5|60|||co
+Hanging leg raise|va|a|p|8|15|1|60|||co
+Decline sit-up|va|a|b|10|15|1|60|||co
+Back extension|jt|a|s|10|15|2.5|60|a||hi
+Weighted back extension|jt|a|s|10|15|2.5|60|a||hi
+Pull-up|sl|m|p|5|10|2.5|150||l|vr
+Chin-up|sl|m|p|5|10|2.5|150||l|vr
+Neutral-grip pull-up|sl|m|p|5|10|2.5|150||l|vr
+Wide-grip pull-up|sl|m|p|5|10|2.5|150|o|l|vr
+Weighted pull-up|sl|m|p|4|8|2.5|180||l|vr
+Weighted chin-up|sl|m|p|4|8|2.5|180||l|vr
+Weighted neutral-grip pull-up|sl|m|p|4|8|2.5|180||l|vr
+Assisted pull-up|sl|m|s|6|12|5|120||v|vr
+Negative pull-up|sl|a|p|3|6|2.5|120||l|vr
+Push-up|rt|m|w|8|15|2.5|90||l|hp
+Dip|rt|m|w|6|12|2.5|120|o|l|dp
+Plank|va|a|w|30|60|2.5|60||t|co
+Inverted row|sl|m|w|6|12|2.5|90||l|hr
+Nordic curl|jt|a|w|3|8|2.5|120||l|kf`.split('\n').map(r=>{const[n,g,k,q,lo,hi,st,rs,f,w,p]=r.split('|');return{n,g,k,q,lo:+lo,hi:+hi,st:+st,rs:+rs,f:f||'',w:w||'',p}});
+const GN={jk:'Jalat, etureidet',jt:'Takareidet ja pakarat',rt:'Rinta',sl:'Selkä',ol:'Olkapäät',hk:'Hauikset',oj:'Ojentajat',po:'Pohkeet',va:'Vatsa'};
+// liikemallit: sq kyykky, lu yhden jalan, ke polven ojennus, hi lonkkasarana, gl lonkannosto, kf polven koukistus, hp vaakapunnerrus, fl rintalento, dp dipit,
+// hr vaakaveto, vr pystyveto, sa suorin käsin veto, vp pystypunnerrus, la sivunosto, rd takaolkapää, bi hauis, tr ojentaja, ca pohje, co vatsa
+// ohjelmapohjat: c = perusliikkeet tärkeysjärjestyksessä, x = lisäliikkeet, jos aikaa jää. Samana päivänä ei tule kahta samaa liikemallia.
+const TPL={
+ 2:[{t:'kokovartalo',c:[['sq','m'],['hp','m'],['hr','m'],['kf','a'],['la','a'],['tr','a'],['ca','a'],['co','a']],x:[['lu','a'],['fl','a'],['bi','a']]},
+    {t:'kokovartalo',c:[['hi','m'],['vp','m'],['vr','m'],['lu','a'],['fl','a'],['bi','a'],['rd','a'],['co','a']],x:[['ke','a'],['tr','a'],['ca','a']]}],
+ 3:[{t:'kokovartalo',c:[['sq','m'],['hp','m'],['hr','m'],['la','a'],['tr','a'],['ca','a'],['co','a']],x:[['kf','a'],['fl','a']]},
+    {t:'kokovartalo',c:[['hi','m'],['vr','m'],['vp','m'],['lu','a'],['bi','a'],['rd','a'],['co','a']],x:[['ke','a'],['dp','a'],['ca','a']]},
+    {t:'kokovartalo',c:[['sq','m'],['hp','m'],['hr','m'],['kf','a'],['la','a'],['bi','a'],['tr','a']],x:[['gl','a'],['co','a'],['fl','a']]}],
+ 4:[{t:'yläkroppa',c:[['hp','m'],['hr','m'],['vp','m'],['vr','m'],['la','a'],['tr','a'],['bi','a']],x:[['fl','a'],['rd','a']]},
+    {t:'alakroppa',c:[['sq','m'],['hi','m'],['lu','a'],['kf','a'],['ca','a'],['co','a']],x:[['gl','a'],['ke','a']]},
+    {t:'yläkroppa',c:[['vr','m'],['hp','m'],['hr','m'],['la','a'],['rd','a'],['bi','a'],['tr','a']],x:[['fl','a'],['dp','a'],['vp','a']]},
+    {t:'alakroppa',c:[['hi','m'],['sq','m'],['gl','a'],['ke','a'],['kf','a'],['ca','a'],['co','a']],x:[['lu','a']]}]};
+// jos liikemallille ei ole sopivaa liikettä (välineet, rajoitteet tai jo käytetty samana päivänä), kokeillaan näitä
+const PFB={vr:['sa','hr','rd'],kf:['hi','gl'],ke:['lu','sq'],fl:['dp','hp'],la:['vp','rd'],rd:['la','hr'],gl:['hi','kf'],dp:['tr','hp'],lu:['sq','gl'],sq:['lu'],hi:['gl','kf'],hp:['dp','fl'],hr:['vr','sa'],vp:['la','dp'],tr:['dp'],sa:['vr','hr']};
 // vanhat liikkeiden nimet → nykyiset (historia säilyy nimien muuttuessa)
 const ALIAS={"Takakyykky": "Back squat", "Etukyykky": "Front squat", "Penkkipunnerrus": "Bench press", "Vinopenkki käsipainoilla": "Incline dumbbell press", "Kulmasoutu tangolla": "Barbell row", "Rintatuettu soutu": "Chest-supported row", "Pystypunnerrus käsipainoilla": "Dumbbell shoulder press", "Pystypunnerrus koneessa": "Machine shoulder press", "Ojentajat ylätaljassa": "Triceps pushdown", "Ranskalainen punnerrus": "Skull crusher", "Pohkeennousu seisten": "Standing calf raise", "Pohkeennousu istuen": "Seated calf raise", "Vatsarutistus taljassa": "Cable crunch", "Sivutaivutus käsipainolla": "Dumbbell side bend", "Romanialainen maastaveto": "Romanian deadlift", "Perinteinen maastaveto": "Conventional deadlift", "Ylätalja leveällä otteella": "Wide-grip lat pulldown", "Ylätalja kapealla otteella": "Close-grip lat pulldown", "Rintaprässi koneessa": "Machine chest press", "Vinopenkkiprässi koneessa": "Incline machine press", "Bulgarialainen askelkyykky": "Bulgarian split squat", "Askelkyykky käsipainoilla": "Dumbbell lunge", "Hauiskäännöt käsipainoilla": "Dumbbell biceps curl", "Vasarakäännöt": "Hammer curl", "Olkapäiden sivunosto": "Lateral raise", "Sivunosto taljassa": "Cable lateral raise", "Selkäojennus penkissä": "Back extension", "Selkäojennus levyllä": "Weighted back extension", "Jalkaprässi": "Leg press", "Goblet-kyykky": "Goblet squat", "Pystypunnerrus tangolla": "Overhead press", "Arnold-punnerrus": "Arnold press", "Istumasoutu taljassa": "Seated cable row", "Yhden käden käsipainosoutu": "One-arm dumbbell row", "Reisikoukistus makuulla": "Lying leg curl", "Lonkannosto tangolla": "Barbell hip thrust", "Rintalennot taljassa": "Cable fly", "Käsipainolennot": "Dumbbell fly", "Face pull taljassa": "Cable face pull", "Takaolkapäänosto käsipainoilla": "Rear delt dumbbell raise", "Jalannosto riipunnassa": "Hanging leg raise", "Vatsarutistus penkissä": "Decline sit-up"};
