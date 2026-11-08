@@ -499,10 +499,7 @@ const NB=()=>[...NAV.querySelectorAll('button')];
 // välilehden linssi liukuu valittuun kohtaan ja venyy matkalla; sisältö piirtyy esiin
 function liquidTab(){const i=NB().findIndex(b=>b.dataset.t==tab);NAV.style.setProperty('--i',i);
   if(PT!==null&&PT!==tab&&!RM.matches){if(LENS.animate)LENS.animate([{scale:'1 1'},{scale:'1.28 .86',offset:.38},{scale:'.96 1.04',offset:.72},{scale:'1 1'}],{duration:600,easing:'ease-out'});const m=$('#v');m.classList.remove('liq');void m.offsetWidth;m.classList.add('liq')}
-  PT=tab;shine()}
-// valojuova liukuu korteilla vierityksen mukana
-function shine(){const h=innerHeight;document.querySelectorAll('main .card').forEach(c=>{const r=c.getBoundingClientRect();if(r.bottom<0||r.top>h)return;c.style.setProperty('--sp',((r.top+r.height/2)/h).toFixed(3))});
-  document.documentElement.style.setProperty('--gp',(scrollY/Math.max(1,document.documentElement.scrollHeight-h)).toFixed(3))}
+  PT=tab}
 // kosketus: kirkas kohta seuraa sormea ja nappi joustaa
 const lit=(el,e)=>{const r=el.getBoundingClientRect();el.style.setProperty('--hx',((e.clientX-r.left)/r.width*100).toFixed(1)+'%');el.style.setProperty('--hy',((e.clientY-r.top)/r.height*100).toFixed(1)+'%')};
 let PRS=[];
@@ -518,11 +515,10 @@ NAV.addEventListener('pointermove',e=>{if(!ND)return;if(!ND.m&&Math.abs(e.client
 const nup=e=>{if(!ND)return;const m=ND.m;ND=null;LENS.classList.remove('drag');if(!m)return;const nr=NAV.getBoundingClientRect(),bs=NB(),c=e.clientX-nr.left;
   let k=0,best=1e9;bs.forEach((b,i)=>{const r=b.getBoundingClientRect(),d=Math.abs(r.left+r.width/2-nr.left-c);if(d<best){best=d;k=i}});LENS.style.transform='';if(bs[k].dataset.t!==tab)bs[k].click()};
 NAV.addEventListener('pointerup',nup);NAV.addEventListener('pointercancel',()=>{ND=null;LENS.classList.remove('drag');LENS.style.transform=''});
-addEventListener('resize',shine);
 
 R();
 // vieritys: lasipinnat sumentavat enemmän sisällön päällä, ja palkit tiivistyvät alaspäin vieritettäessä
-let LY=scrollY,RAF=0;addEventListener('scroll',()=>{if(RAF)return;RAF=requestAnimationFrame(()=>{RAF=0;const y=Math.max(0,scrollY),dy=y-LY,b=document.body;b.classList.toggle('scr',y>6);shine();
+let LY=scrollY,RAF=0;addEventListener('scroll',()=>{if(RAF)return;RAF=requestAnimationFrame(()=>{RAF=0;const y=Math.max(0,scrollY),dy=y-LY,b=document.body;b.classList.toggle('scr',y>6);
   if(y<40||dy<-10){b.classList.remove('min');LY=y}else if(dy>10){if(y>120)b.classList.add('min');LY=y}})},{passive:true});
 // näyttö pysyy päällä treenin aikana
 let WL=null;async function wl(){try{if('wakeLock' in navigator&&document.visibilityState=='visible'&&!WL){WL=await navigator.wakeLock.request('screen');WL.addEventListener('release',()=>{WL=null})}}catch(e){}}

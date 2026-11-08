@@ -58,7 +58,7 @@ button{font:inherit;color:inherit}
 .card,#bar,nav,#toast{position:relative;box-shadow:inset 0 0 18px var(--glow),inset 0 1px 1px var(--rim1),var(--gls)}
 .card{background:linear-gradient(160deg,var(--glass),var(--glass2));-webkit-backdrop-filter:blur(var(--cblur)) saturate(180%);backdrop-filter:blur(var(--cblur)) saturate(180%)}
 #bar,nav,#toast{background:linear-gradient(160deg,var(--bar1),var(--bar2));-webkit-backdrop-filter:blur(8px) saturate(200%) brightness(1.05);backdrop-filter:blur(8px) saturate(200%) brightness(1.05);
-  transition:background .4s,width .45s cubic-bezier(.2,.9,.25,1),padding .45s cubic-bezier(.2,.9,.25,1),border-radius .45s,-webkit-backdrop-filter .4s,backdrop-filter .4s}
+  transition:background .4s,transform .45s cubic-bezier(.2,.9,.25,1)}
 /* kirkas vino reunaheijastus */
 .card::after,#bar::after,nav::after,#toast::after{content:"";position:absolute;inset:0;border-radius:inherit;padding:1.2px;pointer-events:none;
   background:linear-gradient(135deg,var(--rim1),var(--rim2) 32%,var(--rim2) 68%,var(--rim1));
@@ -71,7 +71,14 @@ button{font:inherit;color:inherit}
     linear-gradient(115deg,transparent calc(var(--sp,.5)*140% - 48%),rgba(255,255,255,var(--sha)) calc(var(--sp,.5)*140% - 22%),transparent calc(var(--sp,.5)*140% + 4%)),
     linear-gradient(180deg,rgba(255,255,255,.12),transparent 40%);
   transition:--lt .6s ease-out}
-#bar::before,nav::before{--sp:var(--gp,.3)}
+/* palkeissa valojuova on oma kerroksensa, joka liukuu vierityksen mukana. Selain siirtää sitä itse (transform),
+   joten palkkeja ei tarvitse piirtää uudelleen. Vieritykseen sidottu liike toimii iOS 26:ssa ja uudemmissa. */
+#bar::before,nav::before{background:radial-gradient(circle at var(--hx,50%) var(--hy,40%),rgba(255,255,255,calc(var(--lt)*var(--lmax))) 0,transparent 48%),linear-gradient(180deg,rgba(255,255,255,.12),transparent 40%)}
+#bar>.sh,nav>.sh{position:absolute;inset:0;z-index:0;border-radius:inherit;overflow:hidden;pointer-events:none}
+.sh::before{content:"";position:absolute;top:0;bottom:0;left:-100%;width:300%;will-change:transform;transform:translateX(-10%);
+  background:linear-gradient(115deg,transparent 41.3%,rgba(255,255,255,var(--sha)) 50%,transparent 58.7%)}
+@keyframes gsh{from{transform:translateX(-24%)}to{transform:translateX(22.7%)}}
+@supports (animation-timeline:scroll()){.sh::before{animation:gsh linear both;animation-timeline:scroll(root)}}
 .card.lit::before,#bar.lit::before,nav.lit::before{--lt:1;transition:--lt .1s}
 /* kun sisältö vierii palkkien alle, lasi sumentaa enemmän luettavuuden vuoksi */
 body.scr #bar:not(.done),body.scr nav{background:linear-gradient(160deg,var(--barS1),var(--barS2));-webkit-backdrop-filter:blur(14px) saturate(210%) brightness(1.05);backdrop-filter:blur(14px) saturate(210%) brightness(1.05)}
@@ -79,23 +86,20 @@ body.scr #bar:not(.done),body.scr nav{background:linear-gradient(160deg,var(--ba
 .ch,.btn.g,.ib,.tx,input,select,textarea,.lv,.gd,.hs,.rpx>div,.ck{box-shadow:inset 0 1px 0 var(--hi),inset 0 0 0 .5px var(--rim2)}
 
 /* ---------- kelluva ajastin ---------- */
-#bar{position:fixed;z-index:11;top:calc(env(safe-area-inset-top,0px) + 6px);left:50%;transform:translateX(-50%);width:calc(100% - 24px);max-width:536px;
+#bar{position:fixed;z-index:11;top:calc(env(safe-area-inset-top,0px) + 6px);left:50%;transform:translateX(-50%);transform-origin:50% 0;width:calc(100% - 24px);max-width:536px;
   border-radius:30px;padding:8px 10px 8px 18px;display:flex;align-items:center;gap:8px;color:var(--t)}
 #bar>*{position:relative}
 #bar.done{background:linear-gradient(160deg,color-mix(in srgb,var(--a) 75%,transparent),color-mix(in srgb,var(--a) 50%,transparent));color:#fff}
 .tw{min-width:76px;line-height:1}
-#tm{font-size:32px;font-weight:700;letter-spacing:-1px;font-variant-numeric:tabular-nums;text-shadow:var(--gtx);transition:font-size .4s cubic-bezier(.2,.9,.25,1)}
-#tl{font-size:11px;color:var(--m);margin-top:3px;max-width:96px;max-height:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:var(--gtx);transition:max-height .3s,opacity .25s,margin .3s}
+#tm{font-size:32px;font-weight:700;letter-spacing:-1px;font-variant-numeric:tabular-nums;text-shadow:var(--gtx)}
+#tl{font-size:11px;color:var(--m);margin-top:3px;max-width:96px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:var(--gtx)}
 #bar.done #tm,#bar.done #tl{text-shadow:none}#bar.done #tl{color:rgba(255,255,255,.9)}
 .tx{flex:none;width:34px;height:34px;border-radius:50%;border:0;background:var(--fill);color:inherit;font-size:15px}
 #bar .cs{flex:1;margin:-6px 0 -12px -6px;-webkit-mask-image:linear-gradient(90deg,#000 86%,transparent);mask-image:linear-gradient(90deg,#000 86%,transparent);padding-right:14px}
-#bar .ch{padding:8px 12px;transition:padding .4s,font-size .4s,background .2s}
+#bar .ch{padding:8px 12px;transition:background .2s}
 #bar.done .ch,#bar.done .tx{background:rgba(255,255,255,.24);color:#fff}
-body.min #bar{width:calc(100% - 44px);padding:5px 8px 5px 16px}
-body.min #tm{font-size:24px}
-body.min #tl{max-height:0;opacity:0;margin-top:0}
-body.min #bar .ch{padding:6px 10px;font-size:13px}
-body.min .tx{width:28px;height:28px}
+/* alaspäin vieritettäessä palkki pienenee. Pelkkä transform: ei uudelleenasettelua eikä -piirtoa. */
+body.min #bar{transform:translateX(-50%) scale(.86)}
 
 /* ---------- yleiset osat ---------- */
 main{padding:calc(env(safe-area-inset-top,0px) + 76px) 14px calc(env(safe-area-inset-bottom,0px) + 112px);max-width:560px;margin:auto}
@@ -181,12 +185,12 @@ details.hi summary{font-weight:600}
 .rl{display:grid;grid-template-columns:1fr auto auto;gap:6px;align-items:center;padding:6px 0;border-top:.5px solid var(--b);font-size:15px}
 
 /* ---------- kelluva alapalkki ---------- */
-nav{position:fixed;z-index:11;left:50%;transform:translateX(-50%);bottom:max(10px,calc(env(safe-area-inset-bottom,0px) - 8px));
+nav{position:fixed;z-index:11;left:50%;transform:translateX(-50%);transform-origin:50% 100%;bottom:max(10px,calc(env(safe-area-inset-bottom,0px) - 8px));
   width:calc(100% - 24px);max-width:536px;display:flex;gap:2px;border-radius:34px;padding:6px}
 nav button{position:relative;flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:7px 0 5px;border:0;border-radius:28px;background:none;
-  color:var(--t);font-size:10.5px;font-weight:500;transition:background .3s,color .2s,padding .45s cubic-bezier(.2,.9,.25,1),transform .12s}
-nav button svg{filter:drop-shadow(var(--gtx));opacity:.88;transition:opacity .2s}
-nav button span{max-height:14px;opacity:.88;text-shadow:var(--gtx);transition:max-height .35s,opacity .25s}
+  color:var(--t);font-size:10.5px;font-weight:500;transition:background .3s,color .2s,transform .12s}
+nav button svg{filter:drop-shadow(var(--gtx));opacity:.88;transition:opacity .2s,transform .45s cubic-bezier(.2,.9,.25,1)}
+nav button span{opacity:.88;text-shadow:var(--gtx);transition:opacity .2s}
 nav{touch-action:none}
 nav button{z-index:1}
 nav .on{color:var(--a);font-weight:600}
@@ -194,18 +198,17 @@ nav .on{color:var(--a);font-weight:600}
 nav .lens{position:absolute;z-index:0;left:6px;top:6px;bottom:6px;width:calc((100% - 20px)/5);border-radius:28px;pointer-events:none;
   background:var(--sel);box-shadow:inset 0 0 0 .5px var(--rim2),inset 0 1px 0 var(--hi),inset 0 0 10px var(--glow);
   transform:translateX(calc(var(--i,0)*(100% + 2px)));
-  transition:transform .6s cubic-bezier(.3,1.35,.45,1),left .45s,top .45s,bottom .45s,width .45s,background .3s,box-shadow .3s}
-nav .lens.drag{transition:left .45s,top .45s,bottom .45s,width .45s,background .3s,box-shadow .3s;background:color-mix(in srgb,var(--sel) 60%,transparent);
+  transition:transform .6s cubic-bezier(.3,1.35,.45,1),background .3s,box-shadow .3s}
+nav .lens.drag{transition:background .3s,box-shadow .3s;background:color-mix(in srgb,var(--sel) 60%,transparent);
   box-shadow:inset 0 0 0 1px var(--rim1),inset 0 1px 1px var(--rim1),inset 0 0 16px var(--glow),0 6px 18px rgba(0,0,0,.12);scale:1.12 1.1}
-body.min nav .lens{left:4px;top:4px;bottom:4px;width:calc((100% - 16px)/5)}
 /* välilehden vaihto: sisältö piirtyy esiin sumeasta kuin lasin läpi */
 @keyframes liq{from{opacity:.35;filter:blur(10px);transform:scale(.985)}to{opacity:1;filter:none;transform:none}}
 main.liq{animation:liq .42s cubic-bezier(.2,.9,.25,1)}
 nav .on svg,nav .on span{opacity:1}
 nav .on svg{stroke-width:2.2}
-body.min nav{width:min(300px,calc(100% - 24px));padding:4px;border-radius:30px}
-body.min nav button{padding:9px 0}
-body.min nav button span{max-height:0;opacity:0}
+body.min nav{transform:translateX(-50%) scale(.8)}
+body.min nav button span{opacity:0}
+body.min nav button svg{transform:translateY(7.5px) scale(1.15)}
 body.kb nav{display:none}
 
 /* ---------- ilmoitus ---------- */
@@ -241,11 +244,11 @@ body.kb nav{display:none}
 
 /* ---------- ajastin levossa: pieni Tauko-pilleri ---------- */
 #ti{display:none;flex:none}
-#bar{transition:width .5s cubic-bezier(.3,1.25,.4,1),padding .4s,background .3s}
+#bar{transition:width .5s cubic-bezier(.3,1.25,.4,1),padding .4s,background .3s,transform .45s cubic-bezier(.2,.9,.25,1)}
 #bar.idle,body.min #bar.idle{width:118px;padding:9px 14px;cursor:pointer;gap:0}
 #bar.idle .tw{display:flex;align-items:center;justify-content:center;gap:6px;min-width:0;width:100%}
 #bar.idle #tm,#bar.idle .cs{display:none}#bar.idle #ti{display:block;color:var(--a)}
-#bar.idle #tl,body.min #bar.idle #tl{font-size:16px;font-weight:600;color:var(--t);margin:0;max-height:20px;opacity:1;max-width:none}
+#bar.idle #tl{font-size:16px;font-weight:600;color:var(--t);margin:0;max-width:none}
 
 /* ---------- kumoa-ilmoitus ---------- */
 #toast.act{pointer-events:auto;display:flex;align-items:center;gap:14px;padding:7px 7px 7px 18px;text-align:left}
