@@ -48,6 +48,9 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:calc(env(safe-area-
   background:linear-gradient(180deg,var(--bg) 0%,color-mix(in srgb,var(--bg) 80%,transparent) 55%,color-mix(in srgb,var(--bg) 0%,transparent) 100%);
   opacity:0;transition:opacity .25s}
 body.scr::before{opacity:1}
+/* iOS 26 ja uudemmat piirtävät Koti-valikon sovelluksen yläreunaan oman sumennuksen ja viivan, ellei yläreunassa ole kiinteää,
+   koko leveää elementtiä, jolla on yhtenäinen taustaväri. Tämä kaistale antaa iOS:lle taustavärin mutta ei piirrä mitään näkyvää. */
+#edge{position:fixed;top:0;left:0;right:0;height:12px;z-index:10;background-color:var(--bg);-webkit-background-clip:text;background-clip:text;color:transparent}
 button{font:inherit;color:inherit}
 [hidden]{display:none!important}
 

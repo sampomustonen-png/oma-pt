@@ -401,7 +401,9 @@ function mergeState(a,b){norm(a);norm(b);const del=new Set([...(a.del||[]),...(b
 window.APP={get:()=>S,merge:mergeState,set:m=>{S=Object.assign(base(),m);migrate();P=S.prog||DEF;sv(false);R()},cloud:c=>{CL=c;if(tab=='s')R()}};
 
 // ---------- piirto ----------
-const ap=()=>{const r=document.documentElement;if(S.theme=='l')r.dataset.theme='light';else if(S.theme=='d')r.dataset.theme='dark';else r.removeAttribute('data-theme')};
+const ap=()=>{const r=document.documentElement;if(S.theme=='l')r.dataset.theme='light';else if(S.theme=='d')r.dataset.theme='dark';else r.removeAttribute('data-theme');
+  // tilarivin väri seuraa sovelluksen teemaa
+  const f=S.theme=='l'?'#ececf0':S.theme=='d'?'#0a0a0c':0;document.querySelectorAll('meta[name=theme-color]').forEach(m=>m.content=f||(/dark/.test(m.media)?'#0a0a0c':'#ececf0'))};
 let PT=null;
 function R(){P=S.prog||DEF;ap();$('#v').innerHTML={w:vw,r:vr,g:vg,p:vp,s:vs}[tab]();liquidTab();document.querySelectorAll('nav button').forEach(b=>{const on=b.dataset.t==tab;b.classList.toggle('on',on);b.setAttribute('aria-current',on?'page':'false')});tk()}
 
